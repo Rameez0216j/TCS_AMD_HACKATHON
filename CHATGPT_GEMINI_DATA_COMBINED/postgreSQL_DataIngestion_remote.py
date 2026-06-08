@@ -12,10 +12,12 @@ import psycopg2
 # ==========================================
 DB_HOST = "localhost"
 DB_PORT = "5432"
-DB_NAME = "fraud_detection"
+DB_NAME = "bankdb"
 DB_USER = "postgres"
-DB_PASSWORD = "your_secure_password"  # Update with your actual database password
+DB_PASSWORD = "postgres"  # Update with your actual database password
 
+
+DATA_DIR = "/workspace/shared/TCS_AMD_HACKATHON/CHATGPT_GEMINI_DATA_COMBINED"
 # ==========================================
 # 2. SCHEMA DEFINITION (PostgreSQL DDL)
 # ==========================================
@@ -202,7 +204,7 @@ DDL_STATEMENTS = [
         investigation_status VARCHAR(50),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
-    """
+    """,
 ]
 
 # Performance-optimized indexes
@@ -214,7 +216,7 @@ INDEX_STATEMENTS = [
     "CREATE INDEX IF NOT EXISTS idx_tx_merchant ON transactions(merchant_id);",
     "CREATE INDEX IF NOT EXISTS idx_behavior_customer ON customer_behavior(customer_id);",
     "CREATE INDEX IF NOT EXISTS idx_behavior_device ON customer_behavior(device_id);",
-    "CREATE INDEX IF NOT EXISTS idx_sanction_entity ON sanction_list(entity_name);"
+    "CREATE INDEX IF NOT EXISTS idx_sanction_entity ON sanction_list(entity_name);",
 ]
 
 # ==========================================
@@ -230,8 +232,9 @@ INGESTION_PIPELINE = [
     {"table": "fraud_cases", "file": "fraud_cases.csv"},
     {"table": "transactions", "file": "transactions.csv"},
     {"table": "customer_behavior", "file": "customer_behavior.csv"},
-    {"table": "audit_logs", "file": "audit_logs.csv"}
+    {"table": "audit_logs", "file": "audit_logs.csv"},
 ]
+
 
 def main():
     print("Connecting to PostgreSQL Database...")
@@ -241,11 +244,11 @@ def main():
             port=DB_PORT,
             database=DB_NAME,
             user=DB_USER,
-            password=DB_PASSWORD
+            password=DB_PASSWORD,
         )
         cursor = conn.cursor()
         print(" Connected successfully.")
-        
+
         # Step 1: Establish Database Architecture
         print("\nDeploying Relational Tables (DDL)...")
         for statement in DDL_STATEMENTS:
@@ -257,20 +260,25 @@ def main():
         print("\nBeginning Pipeline Bulk Ingestion...")
         for pipeline in INGESTION_PIPELINE:
             table_name = pipeline["table"]
-            csv_file = pipeline["file"]
-            
+            csv_path = os.path.join(DATA_DIR, pipeline["file"])
+            csv_file = f"{csv_path}"
+
             if not os.path.exists(csv_file):
-                print(f" ERROR: Missing data source file: {csv_file}. Skipping execution.")
+                print(
+                    f" ERROR: Missing data source file: {csv_file}. Skipping execution."
+                )
                 continue
-                
-            print(f" -> Streaming {csv_file} natively into target table '{table_name}'...")
-            
+
+            print(
+                f" -> Streaming {csv_file} natively into target table '{table_name}'..."
+            )
+
             # Using copy_expert bypasses standard row insertion bottlenecks for extreme speeds
-            with open(csv_file, 'r', encoding='utf-8') as f:
+            with open(csv_file, "r", encoding="utf-8") as f:
                 # Read header row to inform Postgres exactly which columns are incoming
                 header = f.readline().strip()
-                f.seek(0) # Reset stream pointer back to beginning
-                
+                f.seek(0)  # Reset stream pointer back to beginning
+
                 copy_query = f"""
                     COPY {table_name} ({header}) 
                     FROM STDIN 
@@ -278,26 +286,27 @@ def main():
                 """
                 cursor.copy_expert(copy_query, f)
             conn.commit()
-            
+
         # Step 3: Optimize with Analytics Structural Indexes
         print("\nGenerating Query Performance Indexes...")
         for index_stmt in INDEX_STATEMENTS:
             cursor.execute(index_stmt)
         conn.commit()
-        
+
         print("\n" + "=" * 60)
         print("INGESTION COMPLETE: PLATFORM DATABASE IS LIVE AND READY FOR PRODUCTION")
         print("=" * 60)
 
     except Exception as e:
         print(f"\nCRITICAL PIPELINE FAILURE: {str(e)}")
-        if 'conn' in locals() and conn:
+        if "conn" in locals() and conn:
             conn.rollback()
     finally:
-        if 'cursor' in locals() and cursor:
+        if "cursor" in locals() and cursor:
             cursor.close()
-        if 'conn' in locals() and conn:
+        if "conn" in locals() and conn:
             conn.close()
+
 
 if __name__ == "__main__":
     main()
