@@ -1,0 +1,101 @@
+merchant_id,merchant_name,merchant_category,merchant_country,merchant_risk_rating,fraud_transaction_count,total_transaction_count,merchant_status,created_at
+MER0000,"Moore, Dorsey and Esparza",Retail,United Kingdom,HIGH,55,249,ACTIVE,2026-06-08 12:00:00
+MER0001,Miller-Pacheco,Retail,Singapore,HIGH,66,240,ACTIVE,2026-06-08 12:00:00
+MER0002,Lewis-Scott,Retail,Singapore,HIGH,57,244,ACTIVE,2026-06-08 12:00:00
+MER0003,"Clay, James and Jones",Retail,United Kingdom,HIGH,67,257,ACTIVE,2026-06-08 12:00:00
+MER0004,Bush-Harrington,Retail,United States,HIGH,66,288,ACTIVE,2026-06-08 12:00:00
+MER0005,Gordon LLC,Retail,Singapore,HIGH,61,252,ACTIVE,2026-06-08 12:00:00
+MER0006,Scott-Brown,Retail,United States,HIGH,53,237,ACTIVE,2026-06-08 12:00:00
+MER0007,Murphy-Moses,Retail,United States,HIGH,66,254,ACTIVE,2026-06-08 12:00:00
+MER0008,"Miranda, Long and Gross",Retail,UAE,HIGH,77,249,ACTIVE,2026-06-08 12:00:00
+MER0009,"Jones, Butler and Anderson",Retail,India,HIGH,57,267,ACTIVE,2026-06-08 12:00:00
+MER0010,"Branch, Cortez and Brown",Retail,United Kingdom,MEDIUM,12,256,ACTIVE,2026-06-08 12:00:00
+MER0011,Cox-Kennedy,Retail,India,LOW,14,263,ACTIVE,2026-06-08 12:00:00
+MER0012,"Taylor, Kelley and Williams",Retail,India,LOW,12,228,ACTIVE,2026-06-08 12:00:00
+MER0013,Peterson PLC,Retail,India,LOW,19,245,ACTIVE,2026-06-08 12:00:00
+MER0014,Garcia and Sons,Retail,United States,LOW,12,262,ACTIVE,2026-06-08 12:00:00
+MER0015,"Diaz, Wilkinson and White",Retail,United States,LOW,16,242,ACTIVE,2026-06-08 12:00:00
+MER0016,Riley-Moore,Retail,United Kingdom,LOW,15,224,ACTIVE,2026-06-08 12:00:00
+MER0017,"Irwin, Griffin and Jones",Retail,India,LOW,15,267,ACTIVE,2026-06-08 12:00:00
+MER0018,Mendoza Inc,Retail,India,LOW,17,250,ACTIVE,2026-06-08 12:00:00
+MER0019,White PLC,Retail,Singapore,MEDIUM,14,242,ACTIVE,2026-06-08 12:00:00
+MER0020,"Mcneil, Gonzalez and White",Electronics,United Kingdom,MEDIUM,9,254,ACTIVE,2026-06-08 12:00:00
+MER0021,Brown Group,Electronics,UAE,LOW,19,248,ACTIVE,2026-06-08 12:00:00
+MER0022,Smith Ltd,Electronics,United Kingdom,LOW,16,251,ACTIVE,2026-06-08 12:00:00
+MER0023,Nelson PLC,Electronics,Singapore,LOW,15,252,ACTIVE,2026-06-08 12:00:00
+MER0024,"Torres, Riley and Henderson",Electronics,United States,LOW,10,233,ACTIVE,2026-06-08 12:00:00
+MER0025,"Roberts, Thompson and Jenkins",Electronics,United States,LOW,13,270,ACTIVE,2026-06-08 12:00:00
+MER0026,Phillips-Smith,Electronics,United Kingdom,LOW,13,254,ACTIVE,2026-06-08 12:00:00
+MER0027,Johnson-Jones,Electronics,UAE,LOW,12,269,ACTIVE,2026-06-08 12:00:00
+MER0028,Chan PLC,Electronics,UAE,LOW,21,269,ACTIVE,2026-06-08 12:00:00
+MER0029,Smith-Richards,Electronics,India,MEDIUM,14,267,ACTIVE,2026-06-08 12:00:00
+MER0030,Griffin Inc,Electronics,India,MEDIUM,11,234,ACTIVE,2026-06-08 12:00:00
+MER0031,Clark-Lambert,Electronics,United States,LOW,12,251,ACTIVE,2026-06-08 12:00:00
+MER0032,"Peterson, Middleton and Guerra",Electronics,UAE,LOW,9,252,ACTIVE,2026-06-08 12:00:00
+MER0033,Compton-Garrett,Electronics,Singapore,LOW,16,273,ACTIVE,2026-06-08 12:00:00
+MER0034,Brown LLC,Electronics,India,LOW,25,248,ACTIVE,2026-06-08 12:00:00
+MER0035,Stewart-Bailey,Travel,UAE,LOW,19,259,ACTIVE,2026-06-08 12:00:00
+MER0036,"Odom, Thomas and Coleman",Travel,Singapore,MEDIUM,14,248,ACTIVE,2026-06-08 12:00:00
+MER0037,"Knox, Wolfe and Flores",Travel,Singapore,MEDIUM,10,226,ACTIVE,2026-06-08 12:00:00
+MER0038,Robinson-Marshall,Travel,India,LOW,16,245,ACTIVE,2026-06-08 12:00:00
+MER0039,Johnson and Sons,Travel,United Kingdom,LOW,18,253,ACTIVE,2026-06-08 12:00:00
+MER0040,Coleman-Miller,Travel,United States,MEDIUM,12,264,ACTIVE,2026-06-08 12:00:00
+MER0041,Freeman LLC,Travel,United Kingdom,MEDIUM,12,239,ACTIVE,2026-06-08 12:00:00
+MER0042,Harper-Martin,Travel,United States,MEDIUM,14,230,ACTIVE,2026-06-08 12:00:00
+MER0043,Lee and Sons,Travel,United States,LOW,21,281,ACTIVE,2026-06-08 12:00:00
+MER0044,"Gibson, Potter and Ryan",Travel,UAE,LOW,12,245,ACTIVE,2026-06-08 12:00:00
+MER0045,West Group,Food & Dining,United Kingdom,LOW,15,251,ACTIVE,2026-06-08 12:00:00
+MER0046,Parks PLC,Food & Dining,United Kingdom,LOW,18,255,ACTIVE,2026-06-08 12:00:00
+MER0047,Castro Group,Food & Dining,UAE,LOW,11,235,ACTIVE,2026-06-08 12:00:00
+MER0048,Porter-Sherman,Food & Dining,United States,LOW,9,243,ACTIVE,2026-06-08 12:00:00
+MER0049,"Ali, Lawson and Matthews",Food & Dining,UAE,MEDIUM,18,251,ACTIVE,2026-06-08 12:00:00
+MER0050,"Cole, Hernandez and Holden",Food & Dining,India,LOW,13,249,ACTIVE,2026-06-08 12:00:00
+MER0051,Durham and Sons,Food & Dining,United Kingdom,LOW,14,258,ACTIVE,2026-06-08 12:00:00
+MER0052,"Stewart, Phillips and Vincent",Food & Dining,India,LOW,21,259,ACTIVE,2026-06-08 12:00:00
+MER0053,Rivera-Dixon,Food & Dining,UAE,LOW,13,234,ACTIVE,2026-06-08 12:00:00
+MER0054,"Carey, Booker and Martinez",Food & Dining,India,MEDIUM,17,243,ACTIVE,2026-06-08 12:00:00
+MER0055,Guerrero Ltd,Food & Dining,India,MEDIUM,16,229,ACTIVE,2026-06-08 12:00:00
+MER0056,Robinson-Mcdowell,Food & Dining,United States,MEDIUM,17,274,ACTIVE,2026-06-08 12:00:00
+MER0057,Ibarra-Black,Food & Dining,United Kingdom,LOW,20,256,ACTIVE,2026-06-08 12:00:00
+MER0058,"Humphrey, Stone and Davis",Food & Dining,United States,MEDIUM,14,247,ACTIVE,2026-06-08 12:00:00
+MER0059,Gonzalez-Guzman,Food & Dining,India,LOW,18,251,ACTIVE,2026-06-08 12:00:00
+MER0060,"Brown, Davis and Brown",E-Commerce,United States,MEDIUM,20,243,ACTIVE,2026-06-08 12:00:00
+MER0061,Patterson LLC,E-Commerce,Singapore,LOW,15,251,ACTIVE,2026-06-08 12:00:00
+MER0062,Garner-Chang,E-Commerce,United States,LOW,20,268,ACTIVE,2026-06-08 12:00:00
+MER0063,Bell-Phillips,E-Commerce,United States,LOW,12,236,ACTIVE,2026-06-08 12:00:00
+MER0064,"Lawson, Johnson and Young",E-Commerce,India,LOW,15,241,ACTIVE,2026-06-08 12:00:00
+MER0065,Bennett PLC,E-Commerce,India,LOW,13,222,ACTIVE,2026-06-08 12:00:00
+MER0066,Perez-Weber,E-Commerce,India,MEDIUM,17,263,ACTIVE,2026-06-08 12:00:00
+MER0067,Oneal Ltd,E-Commerce,Singapore,LOW,18,234,ACTIVE,2026-06-08 12:00:00
+MER0068,Church-Ramirez,E-Commerce,Singapore,MEDIUM,15,229,ACTIVE,2026-06-08 12:00:00
+MER0069,Frederick LLC,E-Commerce,United Kingdom,LOW,19,253,ACTIVE,2026-06-08 12:00:00
+MER0070,Black PLC,E-Commerce,United States,MEDIUM,7,222,ACTIVE,2026-06-08 12:00:00
+MER0071,Bryant-Davis,E-Commerce,United States,LOW,13,247,ACTIVE,2026-06-08 12:00:00
+MER0072,Lee Inc,E-Commerce,UAE,LOW,18,253,ACTIVE,2026-06-08 12:00:00
+MER0073,Kelly Inc,E-Commerce,UAE,LOW,15,241,ACTIVE,2026-06-08 12:00:00
+MER0074,Davis-Cole,E-Commerce,United Kingdom,LOW,18,252,ACTIVE,2026-06-08 12:00:00
+MER0075,Chen-Smith,Gaming,United States,LOW,10,246,ACTIVE,2026-06-08 12:00:00
+MER0076,Malone LLC,Gaming,UAE,LOW,15,282,ACTIVE,2026-06-08 12:00:00
+MER0077,Cobb LLC,Gaming,UAE,LOW,22,248,ACTIVE,2026-06-08 12:00:00
+MER0078,Gibson PLC,Gaming,United States,MEDIUM,14,251,ACTIVE,2026-06-08 12:00:00
+MER0079,Sherman PLC,Gaming,United Kingdom,LOW,15,259,ACTIVE,2026-06-08 12:00:00
+MER0080,Davis-Duarte,Gaming,UAE,MEDIUM,16,227,ACTIVE,2026-06-08 12:00:00
+MER0081,"Castillo, Lee and Shaffer",Gaming,United States,LOW,14,262,ACTIVE,2026-06-08 12:00:00
+MER0082,Brown Inc,Gaming,UAE,LOW,12,233,ACTIVE,2026-06-08 12:00:00
+MER0083,"Gomez, Briggs and Gomez",Gaming,United States,MEDIUM,19,253,ACTIVE,2026-06-08 12:00:00
+MER0084,Hickman-Brown,Gaming,Singapore,LOW,17,242,ACTIVE,2026-06-08 12:00:00
+MER0085,"Jackson, Scott and Barker",Financial Services,UAE,MEDIUM,16,238,ACTIVE,2026-06-08 12:00:00
+MER0086,"Miller, Larson and Gonzalez",Financial Services,United Kingdom,LOW,16,279,ACTIVE,2026-06-08 12:00:00
+MER0087,Thomas and Sons,Financial Services,United States,MEDIUM,14,228,ACTIVE,2026-06-08 12:00:00
+MER0088,"Carter, Jarvis and Dickerson",Financial Services,India,LOW,19,279,ACTIVE,2026-06-08 12:00:00
+MER0089,White Inc,Financial Services,United States,LOW,12,250,ACTIVE,2026-06-08 12:00:00
+MER0090,Cabrera LLC,Financial Services,UAE,LOW,14,261,ACTIVE,2026-06-08 12:00:00
+MER0091,"Mccormick, Williams and Brown",Financial Services,United States,LOW,20,245,ACTIVE,2026-06-08 12:00:00
+MER0092,Wiley Inc,Financial Services,United Kingdom,MEDIUM,17,225,ACTIVE,2026-06-08 12:00:00
+MER0093,Larsen-Jones,Financial Services,UAE,LOW,12,273,ACTIVE,2026-06-08 12:00:00
+MER0094,Cross Inc,Financial Services,UAE,LOW,15,244,ACTIVE,2026-06-08 12:00:00
+MER0095,Lara Inc,Digital Services,Singapore,LOW,9,262,ACTIVE,2026-06-08 12:00:00
+MER0096,Nash PLC,Digital Services,UAE,LOW,25,268,ACTIVE,2026-06-08 12:00:00
+MER0097,"Hawkins, Johnson and Keller",Digital Services,Singapore,LOW,19,242,ACTIVE,2026-06-08 12:00:00
+MER0098,"Pierce, Kaiser and Smith",Digital Services,Singapore,LOW,12,239,ACTIVE,2026-06-08 12:00:00
+MER0099,"Hernandez, Stevens and Green",Digital Services,India,LOW,23,243,ACTIVE,2026-06-08 12:00:00
