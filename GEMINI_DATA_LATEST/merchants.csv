@@ -1,0 +1,101 @@
+merchant_id,merchant_name,merchant_category,merchant_country,merchant_risk_rating,fraud_transaction_count,total_transaction_count,merchant_status,created_at
+MERCH-1000,Retail Global Inc 1,Retail,India,HIGH,146,233,UNDER_REVIEW,2024-01-01 00:00:00
+MERCH-1001,Retail Global Inc 2,Retail,UAE,HIGH,164,254,UNDER_REVIEW,2024-01-01 00:00:00
+MERCH-1002,Retail Global Inc 3,Retail,Germany,HIGH,177,269,UNDER_REVIEW,2024-01-01 00:00:00
+MERCH-1003,Retail Global Inc 4,Retail,UAE,HIGH,147,255,UNDER_REVIEW,2024-01-01 00:00:00
+MERCH-1004,Retail Global Inc 5,Retail,United Kingdom,HIGH,155,240,UNDER_REVIEW,2024-01-01 00:00:00
+MERCH-1005,Retail Global Inc 6,Retail,India,HIGH,149,278,UNDER_REVIEW,2024-01-01 00:00:00
+MERCH-1006,Retail Global Inc 7,Retail,UAE,HIGH,145,238,UNDER_REVIEW,2024-01-01 00:00:00
+MERCH-1007,Retail Global Inc 8,Retail,United Kingdom,HIGH,141,255,UNDER_REVIEW,2024-01-01 00:00:00
+MERCH-1008,Retail Global Inc 9,Retail,India,HIGH,164,276,UNDER_REVIEW,2024-01-01 00:00:00
+MERCH-1009,Retail Global Inc 10,Retail,United States,HIGH,150,254,UNDER_REVIEW,2024-01-01 00:00:00
+MERCH-1010,Retail Global Inc 11,Retail,Canada,LOW,39,234,ACTIVE,2024-01-01 00:00:00
+MERCH-1011,Retail Global Inc 12,Retail,Singapore,LOW,43,270,ACTIVE,2024-01-01 00:00:00
+MERCH-1012,Retail Global Inc 13,Retail,Brazil,LOW,49,269,ACTIVE,2024-01-01 00:00:00
+MERCH-1013,Retail Global Inc 14,Retail,France,LOW,31,278,ACTIVE,2024-01-01 00:00:00
+MERCH-1014,Retail Global Inc 15,Retail,Germany,LOW,45,256,ACTIVE,2024-01-01 00:00:00
+MERCH-1015,Retail Global Inc 16,Retail,Australia,LOW,40,240,ACTIVE,2024-01-01 00:00:00
+MERCH-1016,Retail Global Inc 17,Retail,UAE,MEDIUM,39,250,ACTIVE,2024-01-01 00:00:00
+MERCH-1017,Retail Global Inc 18,Retail,Brazil,LOW,28,253,ACTIVE,2024-01-01 00:00:00
+MERCH-1018,Retail Global Inc 19,Retail,Germany,LOW,47,250,ACTIVE,2024-01-01 00:00:00
+MERCH-1019,Retail Global Inc 20,Retail,UAE,MEDIUM,36,225,ACTIVE,2024-01-01 00:00:00
+MERCH-1020,Electronics Global Inc 21,Electronics,UAE,LOW,57,259,ACTIVE,2024-01-01 00:00:00
+MERCH-1021,Electronics Global Inc 22,Electronics,Brazil,LOW,43,260,ACTIVE,2024-01-01 00:00:00
+MERCH-1022,Electronics Global Inc 23,Electronics,France,LOW,44,264,ACTIVE,2024-01-01 00:00:00
+MERCH-1023,Electronics Global Inc 24,Electronics,Singapore,LOW,45,272,ACTIVE,2024-01-01 00:00:00
+MERCH-1024,Electronics Global Inc 25,Electronics,Germany,LOW,35,240,ACTIVE,2024-01-01 00:00:00
+MERCH-1025,Electronics Global Inc 26,Electronics,France,LOW,53,237,ACTIVE,2024-01-01 00:00:00
+MERCH-1026,Electronics Global Inc 27,Electronics,United States,LOW,37,223,ACTIVE,2024-01-01 00:00:00
+MERCH-1027,Electronics Global Inc 28,Electronics,Singapore,LOW,51,262,ACTIVE,2024-01-01 00:00:00
+MERCH-1028,Electronics Global Inc 29,Electronics,UAE,LOW,46,256,ACTIVE,2024-01-01 00:00:00
+MERCH-1029,Electronics Global Inc 30,Electronics,Singapore,MEDIUM,46,256,ACTIVE,2024-01-01 00:00:00
+MERCH-1030,Electronics Global Inc 31,Electronics,India,LOW,38,260,ACTIVE,2024-01-01 00:00:00
+MERCH-1031,Electronics Global Inc 32,Electronics,Australia,LOW,42,236,ACTIVE,2024-01-01 00:00:00
+MERCH-1032,Electronics Global Inc 33,Electronics,UAE,LOW,44,254,ACTIVE,2024-01-01 00:00:00
+MERCH-1033,Electronics Global Inc 34,Electronics,India,LOW,41,258,ACTIVE,2024-01-01 00:00:00
+MERCH-1034,Electronics Global Inc 35,Electronics,India,LOW,52,271,ACTIVE,2024-01-01 00:00:00
+MERCH-1035,Travel Global Inc 36,Travel,Australia,MEDIUM,36,227,ACTIVE,2024-01-01 00:00:00
+MERCH-1036,Travel Global Inc 37,Travel,Australia,LOW,33,247,ACTIVE,2024-01-01 00:00:00
+MERCH-1037,Travel Global Inc 38,Travel,France,MEDIUM,25,201,ACTIVE,2024-01-01 00:00:00
+MERCH-1038,Travel Global Inc 39,Travel,Germany,MEDIUM,42,277,ACTIVE,2024-01-01 00:00:00
+MERCH-1039,Travel Global Inc 40,Travel,United States,LOW,46,248,ACTIVE,2024-01-01 00:00:00
+MERCH-1040,Travel Global Inc 41,Travel,India,MEDIUM,40,243,ACTIVE,2024-01-01 00:00:00
+MERCH-1041,Travel Global Inc 42,Travel,UAE,MEDIUM,48,239,ACTIVE,2024-01-01 00:00:00
+MERCH-1042,Travel Global Inc 43,Travel,India,MEDIUM,50,271,ACTIVE,2024-01-01 00:00:00
+MERCH-1043,Travel Global Inc 44,Travel,India,MEDIUM,38,262,ACTIVE,2024-01-01 00:00:00
+MERCH-1044,Travel Global Inc 45,Travel,Brazil,LOW,49,256,ACTIVE,2024-01-01 00:00:00
+MERCH-1045,Food & Dining Global Inc 46,Food & Dining,UAE,LOW,42,238,ACTIVE,2024-01-01 00:00:00
+MERCH-1046,Food & Dining Global Inc 47,Food & Dining,United States,LOW,35,248,ACTIVE,2024-01-01 00:00:00
+MERCH-1047,Food & Dining Global Inc 48,Food & Dining,Brazil,LOW,39,237,ACTIVE,2024-01-01 00:00:00
+MERCH-1048,Food & Dining Global Inc 49,Food & Dining,Canada,LOW,47,241,ACTIVE,2024-01-01 00:00:00
+MERCH-1049,Food & Dining Global Inc 50,Food & Dining,Singapore,LOW,47,252,ACTIVE,2024-01-01 00:00:00
+MERCH-1050,Food & Dining Global Inc 51,Food & Dining,France,LOW,41,219,ACTIVE,2024-01-01 00:00:00
+MERCH-1051,Food & Dining Global Inc 52,Food & Dining,United States,LOW,47,224,ACTIVE,2024-01-01 00:00:00
+MERCH-1052,Food & Dining Global Inc 53,Food & Dining,Brazil,LOW,48,281,ACTIVE,2024-01-01 00:00:00
+MERCH-1053,Food & Dining Global Inc 54,Food & Dining,Australia,LOW,35,242,ACTIVE,2024-01-01 00:00:00
+MERCH-1054,Food & Dining Global Inc 55,Food & Dining,United Kingdom,LOW,33,223,ACTIVE,2024-01-01 00:00:00
+MERCH-1055,Food & Dining Global Inc 56,Food & Dining,France,MEDIUM,44,243,ACTIVE,2024-01-01 00:00:00
+MERCH-1056,Food & Dining Global Inc 57,Food & Dining,Australia,LOW,29,235,ACTIVE,2024-01-01 00:00:00
+MERCH-1057,Food & Dining Global Inc 58,Food & Dining,Australia,LOW,41,245,ACTIVE,2024-01-01 00:00:00
+MERCH-1058,Food & Dining Global Inc 59,Food & Dining,United States,LOW,45,251,ACTIVE,2024-01-01 00:00:00
+MERCH-1059,Food & Dining Global Inc 60,Food & Dining,United States,LOW,46,258,ACTIVE,2024-01-01 00:00:00
+MERCH-1060,E-Commerce Global Inc 61,E-Commerce,United States,LOW,39,245,ACTIVE,2024-01-01 00:00:00
+MERCH-1061,E-Commerce Global Inc 62,E-Commerce,India,LOW,52,234,ACTIVE,2024-01-01 00:00:00
+MERCH-1062,E-Commerce Global Inc 63,E-Commerce,Canada,LOW,32,268,ACTIVE,2024-01-01 00:00:00
+MERCH-1063,E-Commerce Global Inc 64,E-Commerce,Canada,MEDIUM,39,228,ACTIVE,2024-01-01 00:00:00
+MERCH-1064,E-Commerce Global Inc 65,E-Commerce,India,MEDIUM,43,253,ACTIVE,2024-01-01 00:00:00
+MERCH-1065,E-Commerce Global Inc 66,E-Commerce,UAE,LOW,43,260,ACTIVE,2024-01-01 00:00:00
+MERCH-1066,E-Commerce Global Inc 67,E-Commerce,United Kingdom,MEDIUM,44,237,ACTIVE,2024-01-01 00:00:00
+MERCH-1067,E-Commerce Global Inc 68,E-Commerce,Brazil,LOW,50,256,ACTIVE,2024-01-01 00:00:00
+MERCH-1068,E-Commerce Global Inc 69,E-Commerce,Germany,LOW,32,211,ACTIVE,2024-01-01 00:00:00
+MERCH-1069,E-Commerce Global Inc 70,E-Commerce,India,MEDIUM,37,250,ACTIVE,2024-01-01 00:00:00
+MERCH-1070,E-Commerce Global Inc 71,E-Commerce,United Kingdom,MEDIUM,34,259,ACTIVE,2024-01-01 00:00:00
+MERCH-1071,E-Commerce Global Inc 72,E-Commerce,United Kingdom,LOW,42,266,ACTIVE,2024-01-01 00:00:00
+MERCH-1072,E-Commerce Global Inc 73,E-Commerce,India,LOW,40,247,ACTIVE,2024-01-01 00:00:00
+MERCH-1073,E-Commerce Global Inc 74,E-Commerce,United States,LOW,34,251,ACTIVE,2024-01-01 00:00:00
+MERCH-1074,E-Commerce Global Inc 75,E-Commerce,Singapore,LOW,44,230,ACTIVE,2024-01-01 00:00:00
+MERCH-1075,Gaming Global Inc 76,Gaming,Germany,MEDIUM,38,241,ACTIVE,2024-01-01 00:00:00
+MERCH-1076,Gaming Global Inc 77,Gaming,Canada,LOW,48,262,ACTIVE,2024-01-01 00:00:00
+MERCH-1077,Gaming Global Inc 78,Gaming,India,LOW,49,266,ACTIVE,2024-01-01 00:00:00
+MERCH-1078,Gaming Global Inc 79,Gaming,Canada,LOW,35,271,ACTIVE,2024-01-01 00:00:00
+MERCH-1079,Gaming Global Inc 80,Gaming,United States,LOW,40,251,ACTIVE,2024-01-01 00:00:00
+MERCH-1080,Gaming Global Inc 81,Gaming,India,MEDIUM,32,233,ACTIVE,2024-01-01 00:00:00
+MERCH-1081,Gaming Global Inc 82,Gaming,United Kingdom,MEDIUM,34,248,ACTIVE,2024-01-01 00:00:00
+MERCH-1082,Gaming Global Inc 83,Gaming,France,LOW,45,246,ACTIVE,2024-01-01 00:00:00
+MERCH-1083,Gaming Global Inc 84,Gaming,Singapore,LOW,39,267,ACTIVE,2024-01-01 00:00:00
+MERCH-1084,Gaming Global Inc 85,Gaming,UAE,MEDIUM,36,248,ACTIVE,2024-01-01 00:00:00
+MERCH-1085,Financial Services Global Inc 86,Financial Services,Canada,LOW,43,252,ACTIVE,2024-01-01 00:00:00
+MERCH-1086,Financial Services Global Inc 87,Financial Services,United Kingdom,LOW,41,261,ACTIVE,2024-01-01 00:00:00
+MERCH-1087,Financial Services Global Inc 88,Financial Services,France,LOW,43,242,ACTIVE,2024-01-01 00:00:00
+MERCH-1088,Financial Services Global Inc 89,Financial Services,Canada,LOW,45,244,ACTIVE,2024-01-01 00:00:00
+MERCH-1089,Financial Services Global Inc 90,Financial Services,United Kingdom,LOW,46,243,ACTIVE,2024-01-01 00:00:00
+MERCH-1090,Financial Services Global Inc 91,Financial Services,France,LOW,39,253,ACTIVE,2024-01-01 00:00:00
+MERCH-1091,Financial Services Global Inc 92,Financial Services,Australia,LOW,48,268,ACTIVE,2024-01-01 00:00:00
+MERCH-1092,Financial Services Global Inc 93,Financial Services,Canada,LOW,38,252,ACTIVE,2024-01-01 00:00:00
+MERCH-1093,Financial Services Global Inc 94,Financial Services,Singapore,MEDIUM,42,283,ACTIVE,2024-01-01 00:00:00
+MERCH-1094,Financial Services Global Inc 95,Financial Services,Australia,LOW,39,235,ACTIVE,2024-01-01 00:00:00
+MERCH-1095,Digital Services Global Inc 96,Digital Services,United Kingdom,LOW,42,272,ACTIVE,2024-01-01 00:00:00
+MERCH-1096,Digital Services Global Inc 97,Digital Services,United States,LOW,41,243,ACTIVE,2024-01-01 00:00:00
+MERCH-1097,Digital Services Global Inc 98,Digital Services,UAE,LOW,40,242,ACTIVE,2024-01-01 00:00:00
+MERCH-1098,Digital Services Global Inc 99,Digital Services,Singapore,MEDIUM,42,259,ACTIVE,2024-01-01 00:00:00
+MERCH-1099,Digital Services Global Inc 100,Digital Services,Singapore,MEDIUM,42,230,ACTIVE,2024-01-01 00:00:00
