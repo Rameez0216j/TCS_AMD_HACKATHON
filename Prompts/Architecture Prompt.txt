@@ -1,0 +1,569 @@
+You are a Principal AI Architect, Fraud Analytics Expert, Neo4j Graph Specialist, Agentic AI Engineer, Cloud Solution Architect, and Banking Domain Consultant.
+
+I need you to design an enterprise-grade AI-Powered Fraud Detection and Prevention Platform for Banking Transactions that can also be implemented as a Hackathon MVP within 3 days.
+
+The solution must be technically deep, practical, innovative, scalable, explainable, and presentation-ready for judges, architects, and banking stakeholders.
+
+==================================================================
+PROBLEM STATEMENT
+==================================================================
+
+Banks face the following challenges:
+
+1. Low fraud detection accuracy.
+2. High false positive rates.
+3. Lack of explainability required for regulatory compliance.
+4. Difficulty identifying fraud rings and organized fraud networks.
+5. Inability to correlate customer, device, account, IP, merchant, and transaction relationships.
+6. Challenges in processing real-time transactions.
+7. Lack of intelligent investigation workflows.
+8. Need for explainable fraud decisions for auditors and compliance teams.
+
+The goal is to create a Fraud Detection and Prevention Workflow that leverages:
+
+- AI
+- Machine Learning
+- Multi-Agent Systems
+- Graph Analytics
+- Neo4j
+- GraphRAG
+- RAG
+- MCP (Model Context Protocol)
+- Kafka Streaming
+- LLMs
+- Behavioral Biometrics
+- Explainable AI
+- Vector Databases
+- Real-Time Processing
+- Human-in-the-Loop Review
+
+==================================================================
+MANDATORY TECHNOLOGIES
+==================================================================
+
+Use and justify:
+
+Agentic AI:
+- LangGraph
+- LangChain
+- Multi-Agent Architecture
+- Tool Calling
+- MCP
+
+AI/ML:
+- XGBoost
+- LightGBM
+- Isolation Forest
+- Autoencoders
+- SHAP
+- LLM Reasoning
+
+Graph:
+- Neo4j
+- Graph Analytics
+- Community Detection
+- Fraud Ring Detection
+- GraphRAG
+
+Retrieval:
+- RAG
+- Hybrid Search
+- Vector Search
+- Graph Retrieval
+
+Streaming:
+- Apache Kafka
+
+Storage:
+- PostgreSQL
+- Neo4j
+- ChromaDB or Qdrant
+- Object Storage
+
+Backend:
+- Python
+- FastAPI
+
+Frontend:
+- React
+
+Deployment:
+- Docker
+- Kubernetes
+
+Monitoring:
+- Prometheus
+- Grafana
+- OpenTelemetry
+
+==================================================================
+INPUT FORMATS
+==================================================================
+
+The system must support:
+
+- CSV
+- XML
+- JSON
+- PDF
+- Transaction Logs
+- Banking Statements
+- Emails
+- Images
+- Screenshots
+
+==================================================================
+EXPECTED OUTPUT
+==================================================================
+
+Generate the following sections in EXTREME DETAIL.
+
+==================================================================
+SECTION 1: EXECUTIVE SUMMARY
+==================================================================
+
+Explain:
+
+- Business problem
+- Existing challenges
+- Proposed solution
+- Innovation
+- Business impact
+- Compliance benefits
+- Fraud reduction benefits
+
+==================================================================
+SECTION 2: HIGH LEVEL ARCHITECTURE
+==================================================================
+
+Create:
+
+1. Architecture Overview
+2. Component Diagram
+3. Mermaid Diagram
+4. Layered Architecture
+
+Layers:
+
+- User Layer
+- API Layer
+- Agent Layer
+- AI Layer
+- Data Layer
+- Monitoring Layer
+
+Explain responsibilities of every layer.
+
+==================================================================
+SECTION 3: END TO END DATA FLOW
+==================================================================
+
+Starting from:
+
+"Transaction Received"
+
+Ending at:
+
+"Fraud Decision Generated"
+
+Explain every step in detail.
+
+Include:
+
+Step 1:
+Real-Time Transaction Ingestion
+
+Step 2:
+Kafka Event Streaming
+
+Step 3:
+Validation
+
+Step 4:
+Feature Engineering
+
+Step 5:
+Fraud Model Inference
+
+Step 6:
+Graph Analytics
+
+Step 7:
+GraphRAG
+
+Step 8:
+RAG Retrieval
+
+Step 9:
+LLM Reasoning
+
+Step 10:
+Risk Scoring
+
+Step 11:
+Decision Engine
+
+Step 12:
+Alert Generation
+
+Step 13:
+Human Review
+
+Step 14:
+Compliance Reporting
+
+For each step provide:
+
+- Inputs
+- Outputs
+- Services Used
+- Technologies Used
+- Failure Handling
+
+==================================================================
+SECTION 4: MULTI AGENT ARCHITECTURE
+==================================================================
+
+Design a LangGraph-based system.
+
+Create these agents:
+
+1. Transaction Ingestion Agent
+2. Validation Agent
+3. Feature Engineering Agent
+4. Fraud Detection Agent
+5. Behavioral Biometrics Agent
+6. Graph Analytics Agent
+7. GraphRAG Agent
+8. RAG Agent
+9. Risk Scoring Agent
+10. Explainability Agent
+11. Compliance Agent
+12. Human Review Agent
+
+For each agent provide:
+
+- Responsibilities
+- Inputs
+- Outputs
+- Tools
+- MCP Connections
+- Failure Recovery
+
+Also generate:
+
+- LangGraph State Definition
+- Workflow Routing Logic
+- Conditional Branches
+- Agent Communication Pattern
+
+==================================================================
+SECTION 5: MCP ARCHITECTURE
+==================================================================
+
+Design MCP Servers.
+
+Create:
+
+1. Neo4j MCP Server
+2. RAG MCP Server
+3. Kafka MCP Server
+4. Fraud Analytics MCP Server
+5. Compliance MCP Server
+
+For each MCP Server provide:
+
+- Purpose
+- Tools Exposed
+- APIs
+- Data Flow
+- Example Tool Calls
+
+Explain why MCP is beneficial compared to traditional integrations.
+
+==================================================================
+SECTION 6: MACHINE LEARNING LAYER
+==================================================================
+
+Design ML Architecture.
+
+Include:
+
+Supervised Models:
+- XGBoost
+- LightGBM
+
+Unsupervised Models:
+- Isolation Forest
+- Autoencoder
+
+Explain:
+
+- Features Used
+- Training Process
+- Inference Process
+- Ensemble Strategy
+- Risk Score Generation
+
+Generate feature examples.
+
+==================================================================
+SECTION 7: BEHAVIORAL BIOMETRICS
+==================================================================
+
+Design fraud detection using:
+
+- Transaction velocity
+- Device patterns
+- Location changes
+- Merchant behavior
+- Customer spending habits
+- Time-based behavior
+
+Explain implementation.
+
+==================================================================
+SECTION 8: NEO4J GRAPH ANALYTICS
+==================================================================
+
+Create complete graph schema.
+
+Nodes:
+
+- Customer
+- Account
+- Device
+- IP Address
+- Merchant
+- Transaction
+- Beneficiary
+
+Relationships:
+
+- OWNS
+- USES
+- INITIATED
+- CONNECTED_TO
+- SENT_TO
+- RECEIVED_FROM
+
+Explain:
+
+- Fraud Ring Detection
+- Community Detection
+- Shared Device Detection
+- Shared IP Detection
+- Mule Network Detection
+- Synthetic Identity Detection
+
+Generate example Cypher queries.
+
+==================================================================
+SECTION 9: GRAPHRAG DESIGN
+==================================================================
+
+Explain:
+
+- What GraphRAG is
+- Why GraphRAG is superior to normal RAG for fraud detection
+- Neo4j integration
+- Knowledge Graph generation
+- Retrieval flow
+- Context generation
+
+Generate GraphRAG architecture.
+
+==================================================================
+SECTION 10: RAG SYSTEM
+==================================================================
+
+Design enterprise RAG.
+
+Knowledge Sources:
+
+- Historical fraud cases
+- Banking policies
+- AML regulations
+- KYC guidelines
+- Internal SOPs
+- Compliance documents
+
+Explain:
+
+- Chunking
+- Embeddings
+- Hybrid Retrieval
+- Re-ranking
+- Context Construction
+
+==================================================================
+SECTION 11: EXPLAINABLE AI
+==================================================================
+
+Design explainability layer.
+
+Use:
+
+- SHAP
+- Feature Importance
+- Graph Explanation
+- LLM Explanation
+
+Generate examples for:
+
+1. Customer Explanation
+2. Investigator Explanation
+3. Compliance Explanation
+4. Auditor Explanation
+
+==================================================================
+SECTION 12: FRAUD DECISION ENGINE
+==================================================================
+
+Design decision engine.
+
+Combine:
+
+- ML Risk Score
+- Graph Risk Score
+- Behavioral Risk Score
+- RAG Insights
+- LLM Reasoning Score
+
+Generate final risk score formula.
+
+Explain thresholds.
+
+Example:
+
+0-30 = Safe
+
+31-60 = Review
+
+61-100 = Fraud
+
+Provide reasoning.
+
+==================================================================
+SECTION 13: DASHBOARD DESIGN
+==================================================================
+
+Design React dashboard.
+
+Screens:
+
+1. Fraud Overview
+2. Alert Center
+3. Investigation Workspace
+4. Customer Risk Profile
+5. Network Graph View
+6. Compliance Reports
+
+Generate text wireframes.
+
+==================================================================
+SECTION 14: SECURITY
+==================================================================
+
+Cover:
+
+- RBAC
+- Encryption
+- Audit Logging
+- PCI DSS
+- GDPR
+- Data Governance
+
+Explain implementation.
+
+==================================================================
+SECTION 15: MONITORING
+==================================================================
+
+Use:
+
+- Prometheus
+- Grafana
+- OpenTelemetry
+
+Monitor:
+
+- Kafka Lag
+- Agent Latency
+- Neo4j Queries
+- Vector Search Latency
+- LLM Cost
+- MCP Failures
+
+Generate monitoring architecture.
+
+==================================================================
+SECTION 16: DEPLOYMENT
+==================================================================
+
+Generate production deployment.
+
+Include:
+
+- Docker
+- Kubernetes
+- FastAPI
+- Kafka
+- Neo4j
+- PostgreSQL
+- Qdrant
+- LangGraph Services
+
+Generate deployment diagram.
+
+==================================================================
+SECTION 17: HACKATHON MVP (3 DAYS)
+==================================================================
+
+Create realistic implementation roadmap.
+
+Day 1:
+- Kafka
+- FastAPI
+- Fraud Model
+- Neo4j Setup
+
+Day 2:
+- LangGraph Agents
+- Graph Analytics
+- GraphRAG
+
+Day 3:
+- Dashboard
+- Explainability
+- Demo Flow
+
+Clearly separate:
+
+- Must Have
+- Good To Have
+- Future Scope
+
+==================================================================
+SECTION 18: FINAL ARCHITECTURE DELIVERABLES
+==================================================================
+
+Generate:
+
+1. Executive Summary
+2. High Level Architecture
+3. Detailed Architecture
+4. Mermaid Diagrams
+5. Sequence Diagrams
+6. Agent Workflow Diagram
+7. MCP Architecture Diagram
+8. Neo4j Schema
+9. Kafka Topic Design
+10. Database Design
+11. Deployment Diagram
+12. End-to-End Data Flow
+13. Risk Scoring Formula
+14. Hackathon MVP Plan
+15. Enterprise Roadmap
+
+The output should be highly technical, implementation-focused, enterprise-grade, and detailed enough that a team can directly start development from it.
