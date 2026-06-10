@@ -1,559 +1,538 @@
-"""
-generate_fraud_data_hybrid.py
-High-Fidelity, Relationally Valid Fraud Dataset Generator.
-Tailored for PostgreSQL DDL, Neo4j Graph Queries, and LangGraph Agent Platforms.
-"""
-
-import datetime
-import json
 import os
-import random
+import json
 import uuid
-import numpy as np
+import random
 import pandas as pd
+import numpy as np
+from datetime import datetime, timedelta
+from faker import Faker
 
-try:
-    from faker import Faker
-except ImportError:
-    raise SystemExit(
-        "Dependencies missing! Please execute: pip install pandas numpy faker"
-    )
-
+# Initialize Faker
 fake = Faker()
-
-# Enforce explicit seed targets for reproducibility
+Faker.seed(42)
 random.seed(42)
 np.random.seed(42)
 
-# ==========================================
-# CONFIGURATION (RECOMMENDED HACKATHON SIZE)
-# ==========================================
-TARGET_CUSTOMERS = 2000
-TARGET_DEVICES = 1500
-TARGET_MERCHANTS = 100
-TARGET_BENEFICIARIES = 3000
-TARGET_SANCTION_ENTITIES = 300
-TARGET_FRAUD_CASES = 200
-TARGET_TRANSACTIONS = 25000
-TARGET_BEHAVIOR_RECORDS = 15000
-
-MERCHANT_CATS = (
-    ["Retail"] * 20
-    + ["Electronics"] * 15
-    + ["Travel"] * 10
-    + ["Food & Dining"] * 15
-    + ["E-Commerce"] * 15
-    + ["Gaming"] * 10
-    + ["Financial Services"] * 10
-    + ["Digital Services"] * 5
-)
-COUNTRIES = ["India", "Singapore", "UAE", "United Kingdom", "United States"]
-
-print("=" * 60)
-print("LAUNCHING INTEGRATED SYNTHETIC FRAUD DATA GENERATION ENGINE")
-print("=" * 60)
-
-now = datetime.datetime(2026, 6, 8, 12, 0, 0)
-
-# ==========================================
-# 1. SANCTION ENTITIES & FRAUD CASES
-# ==========================================
-sanctions = []
-sanction_names = []
-for i in range(TARGET_SANCTION_ENTITIES):
-    name = fake.name()
-    sanction_names.append(name)
-    sanctions.append(
-        {
-            "entity_id": f"SAN{i:05d}",
-            "entity_name": name,
-            "entity_type": random.choice(["PERSON", "COMPANY"]),
-            "country": random.choice(COUNTRIES),
-            "sanction_source": "OFAC",
-            "sanction_category": random.choice(
-                ["Terrorism Financing", "Narcotics Trafficking", "Cyber Crime"]
-            ),
-            "reason_for_sanction": "Atypical capital aggregation networks matched to high risk jurisdictions.",
-            "risk_level": "HIGH",
-            "pep_flag": random.random() < 0.1,
-            "fraudster_flag": True,
-            "blacklist_flag": True,
-            "regulatory_reference": f"REG-REF-{100+i}",
-            "effective_date": (now - datetime.timedelta(days=730)).date(),
-            "expiry_date": (now + datetime.timedelta(days=730)).date(),
-            "status": "ACTIVE",
-            "created_at": now,
-            "updated_at": now,
-        }
-    )
-sanctions_df = pd.DataFrame(sanctions)
-
-fraud_cases = []
-fraud_patterns = [
-    (
-        "Mule Account Network",
-        "Layering dirty funds across structured micro-deposits.",
-        "High volume of incoming peer-to-peer transfers swept instantly.",
-    ),
-    (
-        "Account Takeover (ATO)",
-        "Credential stuffing followed by instant balance liquidation.",
-        "Sudden device fingerprint shift accompanied by swift profile modifications.",
-    ),
-    (
-        "Card-Not-Present (CNP)",
-        "Stolen credential monetization via quick consumer checkouts.",
-        "High velocity transaction targeting consumer electronics merchants.",
-    ),
-]
-for i in range(TARGET_FRAUD_CASES):
-    ftype, modus, pattern = random.choice(fraud_patterns)
-    fraud_cases.append(
-        {
-            "case_id": f"CASE{i:05d}",
-            "fraud_type": ftype,
-            "case_title": f"{ftype} Investigation Ring #{i}",
-            "modus_operandi": modus,
-            "fraud_pattern": pattern,
-            "investigation_summary": f"Completed forensic deep-dive analysis on clustered anomalies for node group {i}.",
-            "entities_involved": "Distributed consumer accounts interacting with compromised endpoint assets.",
-            "risk_indicators": "Velocity limit threshold breach, device pool correlation, proxy hopping.",
-            "resolution": "Accounts isolated, associated assets blacklisted globally.",
-            "regulatory_reference": f"FINCEN-SAR-2026-{1000+i}",
-            "created_at": now,
-        }
-    )
-fraud_cases_df = pd.DataFrame(fraud_cases)
-
-# ==========================================
-# 2. MERCHANTS & BENEFICIARIES
-# ==========================================
-merchants = []
-for i in range(TARGET_MERCHANTS):
-    merchants.append(
-        {
-            "merchant_id": f"MER{i:04d}",
-            "merchant_name": fake.company(),
-            "merchant_category": MERCHANT_CATS[i],
-            "merchant_country": random.choice(COUNTRIES),
-            "merchant_risk_rating": (
-                "HIGH" if i < 10 else random.choice(["LOW", "LOW", "MEDIUM"])
-            ),  # Inject 10 high-risk nodes
-            "fraud_transaction_count": 0,  # Dynamically accumulated later
-            "total_transaction_count": 0,  # Dynamically accumulated later
-            "merchant_status": "ACTIVE",
-            "created_at": now,
-        }
-    )
-merchants_df = pd.DataFrame(merchants)
-
-beneficiaries = []
-for i in range(TARGET_BENEFICIARIES):
-    beneficiaries.append(
-        {
-            "receiver_account": f"ACC{random.randint(1000000000, 9999999999)}",
-            "receiver_name": fake.name(),
-            "bank_name": f"{fake.company()} Bank",
-            "country": random.choice(COUNTRIES),
-            "risk_rating": (
-                "HIGH" if i < 50 else random.choice(["LOW", "LOW", "MEDIUM"])
-            ),  # Inject 50 mule targets
-            "fraud_link_count": 0,  # Dynamically accumulated later
-            "sanction_match_flag": random.random() < 0.02,
-            "created_at": now,
-        }
-    )
-beneficiaries_df = pd.DataFrame(beneficiaries)
-
-# ==========================================
-# 3. DEVICES & CUSTOMERS (WITH STRUCTURED FRAUD RING MAPPINGS)
-# ==========================================
-devices = []
-for i in range(TARGET_DEVICES):
-    devices.append(
-        {
-            "device_id": f"DEV{i:05d}",
-            "device_fingerprint": uuid.uuid4().hex,
-            "device_type": random.choice(["Mobile", "Laptop", "Tablet"]),
-            "operating_system": random.choice(["Android", "iOS", "Windows", "MacOS"]),
-            "browser": random.choice(["Chrome", "Safari", "Firefox", "Edge"]),
-            "first_seen": now - datetime.timedelta(days=random.randint(30, 365)),
-            "last_seen": now,
-            "associated_customers_count": 1,
-            "device_risk_score": (
-                round(random.uniform(75.0, 99.9), 2)
-                if i < 100
-                else round(random.uniform(0.0, 40.0), 2)
-            ),
-            "is_blacklisted": True if i < 100 else False,
-            "created_at": now,
-        }
-    )
-devices_df = pd.DataFrame(devices)
-
-customers = []
-customer_metadata = {}
-shared_device_pool = (
-    devices_df["device_id"].iloc[:20].tolist()
-)  # Targeted hardware assets for rings
-shared_ips = [fake.ipv4() for _ in range(50)]
-
-for i in range(TARGET_CUSTOMERS):
-    cid = f"CUST{10000+i}"
-
-    # Force compliance hits
-    if i < 100:
-        c_name = sanction_names[i]
-        risk_rating = "HIGH"
-        prev_fraud = True
-    else:
-        c_name = fake.name()
-        risk_rating = random.choice(["LOW", "LOW", "MEDIUM", "HIGH"])
-        prev_fraud = random.random() < 0.05
-
-    # Structure 20 clean Fraud Ring network groups
-    is_ring_member = 100 <= i < 300
-    if is_ring_member:
-        ring_idx = (i - 100) % 20
-        assigned_device = shared_device_pool[ring_idx]
-        assigned_ip = shared_ips[ring_idx]
-        risk_rating = "HIGH"
-    else:
-        assigned_device = random.choice(devices_df["device_id"].tolist())
-        assigned_ip = fake.ipv4()
-
-    customer_metadata[cid] = {
-        "device_id": assigned_device,
-        "ip": assigned_ip,
-        "is_ring": is_ring_member,
-    }
-    open_date = fake.date_between(start_date="-5y", end_date="-30d")
-
-    customers.append(
-        {
-            "customer_id": cid,
-            "customer_name": c_name,
-            "email": fake.email(),
-            "phone_number": fake.phone_number(),
-            "date_of_birth": fake.date_of_birth(minimum_age=18, maximum_age=75),
-            "gender": random.choice(["Male", "Female", "Other"]),
-            "account_number": f"ACT{10000000 + i}",
-            "account_type": random.choice(["Checking", "Savings"]),
-            "account_open_date": open_date,
-            "account_age_days": (now.date() - open_date).days,
-            "nationality": "Indian",
-            "country": "India",
-            "city": fake.city(),
-            "address": fake.address().replace("\n", " "),
-            "occupation": fake.job(),
-            "annual_income": round(random.uniform(300000, 4500000), 2),
-            "kyc_status": "PASSED" if i >= 30 else "PENDING",
-            "customer_risk_rating": risk_rating,
-            "previous_fraud_flag": prev_fraud,
-            "fraud_incident_count": random.randint(1, 4) if prev_fraud else 0,
-            "created_at": now,
-            "updated_at": now,
-        }
-    )
-customers_df = pd.DataFrame(customers)
-
-# ==========================================
-# 4. TRANSACTIONS & MULTI-AGENT AUDIT LOGS
-# ==========================================
-transactions = []
-audits = []
-
-merchant_tx_stats = {m["merchant_id"]: {"total": 0, "fraud": 0} for m in merchants}
-beneficiary_tx_stats = {
-    b["receiver_account"]: {"total": 0, "fraud": 0} for b in beneficiaries
+COUNTS = {
+    "customers": 2000,
+    "devices": 1500,
+    "beneficiaries": 3000,
+    "merchants": 100,
+    "customer_devices": 3000,
+    "customer_beneficiaries": 5000,
+    "sanction_list": 300,
+    "transactions": 25000,
+    "customer_behavior": 15000,
+    "transaction_analysis_logs": 25000,
 }
 
-# Distribution target counts to perfectly match hackathon spec rules
-total_fraud_target = int(TARGET_TRANSACTIONS * 0.08)  # 8%
-total_blocked_target = int(TARGET_TRANSACTIONS * 0.05)  # 5%
-total_review_target = int(TARGET_TRANSACTIONS * 0.07)  # 7%
+print("🚀 Starting synthetic fraud data generation (Collision-Proof Edition)...")
 
-fraud_count = 0
-blocked_count = 0
-review_count = 0
+# ----------------------------------------------------
+# 1. SANCTION LIST
+# ----------------------------------------------------
+sanction_data = []
+sanction_ids = [f"SANC_{uuid.uuid4().hex}" for _ in range(COUNTS["sanction_list"])]
+countries = [fake.country() for _ in range(20)] + [
+    "Iran",
+    "North Korea",
+    "Russia",
+    "Syria",
+]
 
-print(
-    f" Simulating {TARGET_TRANSACTIONS} transactions with interconnected graph entities..."
-)
-
-for i in range(TARGET_TRANSACTIONS):
-    txid = f"TXN{i:08d}"
-    tx_time = now - datetime.timedelta(
-        days=random.randint(0, 89),
-        hours=random.randint(0, 23),
-        minutes=random.randint(0, 59),
-    )
-
-    # Relational entity lookup
-    cust = customers_df.sample(1).iloc[0]
-    cid = cust["customer_id"]
-    meta = customer_metadata[cid]
-
-    mer = merchants_df.sample(1).iloc[0]
-    mid = mer["merchant_id"]
-
-    ben = beneficiaries_df.sample(1).iloc[0]
-    b_acc = ben["receiver_account"]
-
-    # Fraud logic injection engine
-    is_fraud = False
-    if meta["is_ring"]:
-        is_fraud = True
-    elif mid in [m["merchant_id"] for m in merchants[:10]] and random.random() < 0.5:
-        is_fraud = True
-    elif (
-        b_acc in [b["receiver_account"] for b in beneficiaries[:50]]
-        and random.random() < 0.6
-    ):
-        is_fraud = True
-    elif (
-        meta["device_id"] in [d["device_id"] for d in devices[:100]]
-        and random.random() < 0.4
-    ):
-        is_fraud = True
-
-    # Balance adjustments near limits to force exact global percentage distributions
-    if is_fraud and fraud_count >= total_fraud_target:
-        is_fraud = False
-    if not is_fraud and (total_fraud_target - fraud_count) >= (TARGET_TRANSACTIONS - i):
-        is_fraud = True
-
-    # Real-world skewed amount logic (Lognormal)
-    if is_fraud:
-        amount = round(
-            float(np.random.lognormal(9.5, 0.5)), 2
-        )  # Higher concentration of ticket values
-        fraud_count += 1
-        risk_cat = "HIGH"
-        f_prob = round(random.uniform(0.76, 0.99), 2)
-    else:
-        amount = round(float(np.random.lognormal(7.2, 0.8)), 2)
-        risk_cat = "LOW" if random.random() < 0.85 else "MEDIUM"
-        f_prob = round(random.uniform(0.01, 0.45), 2)
-
-    # Re-balance decision categories to hit targets exactly
-    if risk_cat == "HIGH":
-        if blocked_count < total_blocked_target:
-            decision = "BLOCKED"
-            blocked_count += 1
-        else:
-            decision = "REVIEW_REQUIRED"
-            review_count += 1
-    elif risk_cat == "MEDIUM":
-        if review_count < total_review_target:
-            decision = "REVIEW_REQUIRED"
-            review_count += 1
-        else:
-            decision = "APPROVED"
-    else:
-        decision = "APPROVED"
-
-    # Compile metric state tracking
-    merchant_tx_stats[mid]["total"] += 1
-    beneficiary_tx_stats[b_acc]["total"] += 1
-    if is_fraud:
-        merchant_tx_stats[mid]["fraud"] += 1
-        beneficiary_tx_stats[b_acc]["fraud"] += 1
-
-    # Base Transaction Table Structure (Strictly matching DDL format)
-    transactions.append(
+for i in range(COUNTS["sanction_list"]):
+    eff_date = fake.date_between(start_date="-3y", end_date="-1y")
+    sanction_data.append(
         {
-            "transaction_id": txid,
-            "customer_id": cid,
-            "receiver_account": b_acc,
-            "merchant_id": mid,
-            "transaction_timestamp": tx_time,
-            "transaction_type": random.choice(["TRANSFER", "UPI", "CARD", "WIRE"]),
-            "transaction_amount": amount,
-            "currency": "INR",
-            "payment_method": "ONLINE",
-            "transaction_status": "SUCCESS" if decision != "BLOCKED" else "DECLINED",
-            "device_id": meta["device_id"],
-            "ip_address": meta["ip"],
-            "origin_country": "India",
-            "destination_country": ben["country"],
-            "is_international": ben["country"] != "India",
-            "transaction_frequency_24h": (
-                random.randint(1, 5) if not is_fraud else random.randint(12, 45)
+            "entity_id": sanction_ids[i],
+            "entity_name": fake.company() if random.random() > 0.5 else fake.name(),
+            "entity_type": random.choice(["Individual", "Organization", "Vessel"]),
+            "country": random.choice(countries),
+            "sanction_source": random.choice(["OFAC", "EU", "UN", "UKHM"]),
+            "sanction_category": random.choice(
+                ["Terrorism Financing", "Narcotics", "Cyber Crime", "Regime Sanctions"]
             ),
-            "avg_transaction_amount_7d": round(amount * random.uniform(0.8, 1.2), 2),
-            "failed_transaction_count_24h": (
-                random.randint(0, 1) if not is_fraud else random.randint(3, 9)
+            "reason_for_sanction": fake.sentence(),
+            "risk_level": random.choice(["High", "Critical"]),
+            "pep_flag": random.choice([True, False]),
+            "fraudster_flag": random.choice([True, False]),
+            "blacklist_flag": True,
+            "regulatory_reference": f"REG-202{random.randint(1,5)}-{random.randint(100,999)}",
+            "effective_date": eff_date,
+            "expiry_date": (
+                eff_date + timedelta(days=random.randint(365, 1095))
+                if random.random() > 0.3
+                else None
             ),
-            "unusual_amount_flag": amount > 150000,
-            "unusual_location_flag": random.random() < 0.03 if not is_fraud else True,
-            "multiple_transactions_short_time": is_fraud,
-            "high_risk_device_flag": meta["device_id"]
-            in [d["device_id"] for d in devices[:100]],
-            "velocity_flag": is_fraud,
-            "fraud_flag": is_fraud,
-            "fraud_risk": risk_cat,
-            "created_at": tx_time,
+            "status": "Active",
+            "created_at": datetime.now() - timedelta(days=random.randint(100, 500)),
+            "updated_at": datetime.now() - timedelta(days=random.randint(1, 99)),
         }
     )
+df_sanction = pd.DataFrame(sanction_data)
 
-    # GenAI Multi-Agent Content Injections (For LangGraph/RAG engines)
-    shap_data = {
-        "device_risk_weight": (
-            round(random.uniform(0.6, 0.9), 2)
-            if is_fraud
-            else round(random.uniform(0.0, 0.1), 2)
-        ),
-        "velocity_24h_delta": (
-            round(random.uniform(0.5, 0.8), 2)
-            if is_fraud
-            else round(random.uniform(0.0, 0.05), 2)
-        ),
-        "graph_connection_degree": (
-            round(random.uniform(0.7, 0.95), 2)
-            if meta["is_ring"]
-            else round(random.uniform(0.0, 0.1), 2)
+sanctioned_names = df_sanction["entity_name"].tolist()
+sanctioned_countries = df_sanction["country"].tolist()
+
+# ----------------------------------------------------
+# 2. CUSTOMERS
+# ----------------------------------------------------
+customer_data = []
+customer_ids = [f"CUST_{uuid.uuid4().hex}" for _ in range(COUNTS["customers"])]
+
+for i in range(COUNTS["customers"]):
+    open_date = fake.date_between(start_date="-5y", end_date="-30d")
+    age_days = (datetime.now().date() - open_date).days
+    is_fraudulent_history = random.random() < 0.03
+
+    customer_data.append(
+        {
+            "customer_id": customer_ids[i],
+            "customer_name": fake.name(),
+            "email": fake.unique.email(),
+            "phone_number": fake.unique.msisdn()[:15],
+            "account_number": fake.unique.iban()[:30],
+            "date_of_birth": fake.date_of_birth(minimum_age=18, maximum_age=80),
+            "gender": random.choice(["Male", "Female", "Other", "Prefer not to say"]),
+            "account_type": random.choice(
+                ["Savings", "Checking", "Premium", "Business"]
+            ),
+            "account_open_date": open_date,
+            "account_age_days": age_days,
+            "nationality": fake.country(),
+            "country": fake.country(),
+            "city": fake.city(),
+            "address": fake.address().replace("\n", ", "),
+            "occupation": fake.job(),
+            "annual_income": round(random.uniform(20000, 250000), 2),
+            "kyc_status": random.choice(
+                ["Verified", "Verified", "Verified", "Pending", "Failed"]
+            ),
+            "customer_risk_rating": (
+                "High"
+                if is_fraudulent_history
+                else random.choice(["Low", "Low", "Medium"])
+            ),
+            "previous_fraud_flag": is_fraudulent_history,
+            "fraud_incident_count": (
+                random.randint(1, 4) if is_fraudulent_history else 0
+            ),
+            "created_at": datetime.now() - timedelta(days=age_days),
+            "updated_at": datetime.now() - timedelta(days=random.randint(1, 30)),
+        }
+    )
+df_customers = pd.DataFrame(customer_data)
+
+# ----------------------------------------------------
+# 3. DEVICES
+# ----------------------------------------------------
+device_data = []
+device_ids = [f"DEV_{uuid.uuid4().hex}" for _ in range(COUNTS["devices"])]
+
+for i in range(COUNTS["devices"]):
+    is_bad_device = random.random() < 0.04
+
+    device_data.append(
+        {
+            "device_id": device_ids[i],
+            "device_fingerprint": fake.unique.sha256(),
+            "device_type": random.choice(["Mobile", "Desktop", "Tablet"]),
+            "operating_system": random.choice(
+                ["iOS", "Android", "Windows", "MacOS", "Linux"]
+            ),
+            "browser": random.choice(["Chrome", "Safari", "Firefox", "Edge"]),
+            "first_seen": fake.date_time_between(start_date="-2y", end_date="-1y"),
+            "last_seen": fake.date_time_between(start_date="-30d", end_date="now"),
+            "device_risk_score": (
+                round(random.uniform(75.0, 100.0), 2)
+                if is_bad_device
+                else round(random.uniform(0.0, 45.0), 2)
+            ),
+            "is_blacklisted": is_bad_device,
+            "created_at": datetime.now() - timedelta(days=random.randint(200, 600)),
+        }
+    )
+df_devices = pd.DataFrame(device_data)
+
+# ----------------------------------------------------
+# 4. BENEFICIARIES
+# ----------------------------------------------------
+beneficiary_data = []
+beneficiary_ids = [f"BENE_{uuid.uuid4().hex}" for _ in range(COUNTS["beneficiaries"])]
+
+for i in range(COUNTS["beneficiaries"]):
+    hit_sanction = random.random() < 0.02
+    name = random.choice(sanctioned_names) if hit_sanction else fake.name()
+    country = random.choice(sanctioned_countries) if hit_sanction else fake.country()
+
+    beneficiary_data.append(
+        {
+            "beneficiary_id": beneficiary_ids[i],
+            "receiver_account": fake.unique.iban()[:30],
+            "receiver_name": name,
+            "bank_name": fake.company() + " Bank",
+            "country": country,
+            "risk_rating": (
+                "Critical"
+                if hit_sanction
+                else random.choice(["Low", "Low", "Medium", "High"])
+            ),
+            "fraud_link_count": (
+                random.randint(2, 8) if hit_sanction else random.choice([0, 0, 0, 1])
+            ),
+            "sanction_match_flag": hit_sanction,
+            "created_at": datetime.now() - timedelta(days=random.randint(100, 1000)),
+        }
+    )
+df_beneficiaries = pd.DataFrame(beneficiary_data)
+
+# ----------------------------------------------------
+# 5. MERCHANTS
+# ----------------------------------------------------
+merchant_data = []
+merchant_ids = [f"MERCH_{uuid.uuid4().hex}" for _ in range(COUNTS["merchants"])]
+
+for i in range(COUNTS["merchants"]):
+    is_shell_merch = random.random() < 0.05
+    merchant_data.append(
+        {
+            "merchant_id": merchant_ids[i],
+            "merchant_name": fake.unique.company(),
+            "merchant_category": random.choice(
+                ["Retail", "Gaming", "Crypto Exchange", "Electronics", "Shell Utility"]
+            ),
+            "merchant_country": fake.country(),
+            "merchant_risk_rating": (
+                "High" if is_shell_merch else random.choice(["Low", "Medium"])
+            ),
+            "fraud_transaction_count": (
+                random.randint(15, 80) if is_shell_merch else random.randint(0, 2)
+            ),
+            "total_transaction_count": random.randint(500, 5000),
+            "merchant_status": "Under Review" if is_shell_merch else "Active",
+            "created_at": datetime.now() - timedelta(days=random.randint(300, 1200)),
+        }
+    )
+df_merchants = pd.DataFrame(merchant_data)
+
+# ----------------------------------------------------
+# 6. RELATIONAL MAPPING TABLES (Many-to-Many)
+# ----------------------------------------------------
+cust_dev_pairs = set()
+blacklisted_devs = df_devices[df_devices["is_blacklisted"] == True][
+    "device_id"
+].tolist()
+
+mule_device = blacklisted_devs[0] if blacklisted_devs else device_ids[0]
+for m_cust in customer_ids[:45]:
+    cust_dev_pairs.add((m_cust, mule_device))
+
+while len(cust_dev_pairs) < COUNTS["customer_devices"]:
+    cust_dev_pairs.add((random.choice(customer_ids), random.choice(device_ids)))
+
+cust_devices_data = [
+    {
+        "customer_device_id": f"CDEV_{uuid.uuid4().hex}",
+        "customer_id": p[0],
+        "device_id": p[1],
+        "first_seen": datetime.now() - timedelta(days=random.randint(30, 300)),
+        "last_seen": datetime.now() - timedelta(days=random.randint(1, 29)),
+    }
+    for p in cust_dev_pairs
+]
+df_customer_devices = pd.DataFrame(cust_devices_data)
+
+cust_bene_pairs = set()
+high_risk_benes = df_beneficiaries[df_beneficiaries["sanction_match_flag"] == True][
+    "beneficiary_id"
+].tolist()
+
+mule_bene = high_risk_benes[0] if high_risk_benes else beneficiary_ids[0]
+for m_cust in customer_ids[100:160]:
+    cust_bene_pairs.add((m_cust, mule_bene))
+
+while len(cust_bene_pairs) < COUNTS["customer_beneficiaries"]:
+    cust_bene_pairs.add((random.choice(customer_ids), random.choice(beneficiary_ids)))
+
+cust_benes_data = [
+    {
+        "customer_beneficiary_id": f"CBEN_{uuid.uuid4().hex}",
+        "customer_id": p[0],
+        "beneficiary_id": p[1],
+        "first_transaction_date": datetime.now()
+        - timedelta(days=random.randint(60, 400)),
+        "last_transaction_date": datetime.now() - timedelta(days=random.randint(1, 59)),
+        "relationship_risk_score": (
+            round(random.uniform(70.0, 100.0), 2)
+            if p[1] == mule_bene
+            else round(random.uniform(0.0, 50.0), 2)
         ),
     }
-    sorted_shap = dict(
-        sorted(shap_data.items(), key=lambda item: item[1], reverse=True)
-    )
+    for p in cust_bene_pairs
+]
+df_customer_beneficiaries = pd.DataFrame(cust_benes_data)
 
-    scr_out = f"Compliance Screening Complete. Confidence Match: {'100%' if cid in [c['customer_id'] for c in customers[:100]] else '0%'}. Targeted systems scanned: OFAC, Sanctions Master Registry."
-    beh_agent = f"Behavioral Agent: Input dynamics show transaction speed variance. Interaction cadence signature matches automated bot behaviors: {is_fraud}."
-    graph_agent = f"Graph Agent: Evaluated structural path patterns via Neo4j index lookup. Customer account maps cleanly into a density cluster of active identities utilizing shared asset {meta['device_id']}."
-    risk_agent = f"Risk Orchestration Agent: Aggregated core behavioral features. Calculated fraud threat probability output: {round(f_prob*100, 2)}%. Recommendation protocol overrides to action: {decision}."
-    exp_out = f"Explainability Summary: Transaction evaluation driven by SHAP values. Primary vector variance centered around feature key: {list(sorted_shap.keys())[0]}."
+# ----------------------------------------------------
+# 7. TRANSACTIONS
+# ----------------------------------------------------
+transaction_data = []
+tx_ids = [f"TX_{uuid.uuid4().hex}" for _ in range(COUNTS["transactions"])]
 
-    audits.append(
-        {
-            "audit_id": f"AUD{i:08d}",
-            "transaction_id": txid,
-            "customer_id": cid,
-            "fraud_probability": f_prob * 100,
-            "behavior_score": (
-                round(random.uniform(70, 100), 2)
-                if is_fraud
-                else round(random.uniform(1, 40), 2)
-            ),
-            "graph_score": (
-                round(random.uniform(75, 100), 2)
-                if meta["is_ring"]
-                else round(random.uniform(1, 35), 2)
-            ),
-            "sanction_score": (
-                100.0 if cid in [c["customer_id"] for c in customers[:100]] else 0.0
-            ),
-            "overall_risk_score": f_prob * 100,
-            "risk_category": risk_cat,
-            "decision": decision,
-            "screening_result": scr_out,
-            "behavior_agent_output": beh_agent,
-            "graph_agent_output": graph_agent,
-            "risk_agent_output": risk_agent,
-            "explainability_output": exp_out,
-            "shap_top_features": json.dumps(sorted_shap),
-            "recommended_action": (
-                "IMMEDIATE_SAR_FILING"
-                if decision == "BLOCKED"
-                else (
-                    "MANUAL_COMPLIANCE_HOLD"
-                    if decision == "REVIEW_REQUIRED"
-                    else "PASS"
-                )
-            ),
-            "linked_fraud_cases": (
-                f"CASE{random.randint(0, TARGET_FRAUD_CASES-1)}" if is_fraud else ""
-            ),
-            "report_path": f"/reports/pdf/{txid}_forensic_summary.pdf",
-            "investigation_status": "OPEN" if decision != "APPROVED" else "CLOSED",
-            "created_at": tx_time,
-        }
-    )
-
-transactions_df = pd.DataFrame(transactions)
-audits_df = pd.DataFrame(audits)
-
-# ==========================================
-# 5. CUSTOMER BEHAVIOR JOURNEY STREAM
-# ==========================================
-behaviors = []
-for i in range(TARGET_BEHAVIOR_RECORDS):
-    cust = customers_df.sample(1).iloc[0]
-    cid = cust["customer_id"]
-    meta = customer_metadata[cid]
-    ts = now - datetime.timedelta(
-        days=random.randint(0, 45), minutes=random.randint(0, 1440)
-    )
-    is_ato = i < 200  # Inject 200 explicit Account Takeover profiles
-
-    behaviors.append(
-        {
-            "behavior_id": f"BEH{i:06d}",
-            "customer_id": cid,
-            "device_id": meta["device_id"],
-            "device_fingerprint": uuid.uuid4().hex[:16],
-            "ip_address": fake.ipv4() if is_ato else meta["ip"],
-            "current_country": "India" if not is_ato else "China",
-            "current_city": fake.city(),
-            "previous_country": "India",
-            "previous_city": fake.city(),
-            "location_change_flag": is_ato,
-            "login_timestamp": ts,
-            "logout_timestamp": ts + datetime.timedelta(minutes=random.randint(5, 45)),
-            "session_duration_minutes": random.randint(5, 45),
-            "transactions_last_1h": (
-                random.randint(0, 2) if not is_ato else random.randint(5, 15)
-            ),
-            "transactions_last_24h": random.randint(1, 6),
-            "avg_session_duration": 15.4,
-            "typing_speed_score": (
-                round(random.uniform(10, 35), 2)
-                if is_ato
-                else round(random.uniform(60, 95), 2)
-            ),
-            "mouse_movement_score": (
-                round(random.uniform(5, 30), 2)
-                if is_ato
-                else round(random.uniform(55, 99), 2)
-            ),
-            "device_risk_score": 90.0 if is_ato else 15.0,
-            "behavior_risk_score": 95.0 if is_ato else 10.0,
-            "account_takeover_suspected": is_ato,
-            "created_at": ts,
-        }
-    )
-behavior_records_df = pd.DataFrame(behaviors)
-
-# ==========================================
-# 6. RECONCILE AND UPDATE AGGREGATION LOOKUPS
-# ==========================================
-for idx, row in merchants_df.iterrows():
-    mid = row["merchant_id"]
-    merchants_df.at[idx, "total_transaction_count"] = merchant_tx_stats[mid]["total"]
-    merchants_df.at[idx, "fraud_transaction_count"] = merchant_tx_stats[mid]["fraud"]
-
-for idx, row in beneficiaries_df.iterrows():
-    b_acc = row["receiver_account"]
-    beneficiaries_df.at[idx, "fraud_link_count"] = beneficiary_tx_stats[b_acc]["fraud"]
-
-# ==========================================
-# 7. SAVE PIPELINE ARTIFACTS
-# ==========================================
-print("\n" + "=" * 60)
-print("EXPORTING SYNCHRONIZED ENTITY CSV MATRIX TO DISK")
-print("=" * 60)
-
-customers_df.to_csv("customers.csv", index=False)
-devices_df.to_csv("devices.csv", index=False)
-merchants_df.to_csv("merchants.csv", index=False)
-beneficiaries_df.to_csv("beneficiaries.csv", index=False)
-transactions_df.to_csv("transactions.csv", index=False)
-behavior_records_df.to_csv("customer_behavior.csv", index=False)
-sanctions_df.to_csv("sanction_list.csv", index=False)
-fraud_cases_df.to_csv("fraud_cases.csv", index=False)
-audits_df.to_csv("audit_logs.csv", index=False)
-
-print(
-    " SUCCESS: All relational records are perfectly mapped and scaled for processing."
+cust_to_devs = (
+    df_customer_devices.groupby("customer_id")["device_id"].apply(list).to_dict()
 )
+cust_to_benes = (
+    df_customer_beneficiaries.groupby("customer_id")["beneficiary_id"]
+    .apply(list)
+    .to_dict()
+)
+
+start_timeline = datetime.now() - timedelta(days=180)
+
+for i in range(COUNTS["transactions"]):
+    t_id = tx_ids[i]
+    c_id = random.choice(customer_ids)
+
+    d_id = (
+        random.choice(cust_to_devs[c_id])
+        if c_id in cust_to_devs
+        else random.choice(device_ids)
+    )
+
+    is_p2p = random.random() > 0.4
+    b_id = (
+        (
+            random.choice(cust_to_benes[c_id])
+            if c_id in cust_to_benes
+            else random.choice(beneficiary_ids)
+        )
+        if is_p2p
+        else None
+    )
+    m_id = random.choice(merchant_ids) if not is_p2p else None
+
+    is_fraud_infrastructure = (d_id == mule_device) or (b_id == mule_bene)
+
+    tx_type = (
+        random.choice(["Instant Transfer", "ACH", "Wire"])
+        if is_p2p
+        else random.choice(["POS", "E-Commerce"])
+    )
+    amount = (
+        round(random.uniform(5000, 50000), 2)
+        if is_fraud_infrastructure
+        else round(random.uniform(5, 1200), 2)
+    )
+
+    orig_ctry = fake.country()
+    dest_ctry = (
+        orig_ctry
+        if not is_fraud_infrastructure
+        else "North Korea" if random.random() > 0.5 else "Russia"
+    )
+    is_intl = orig_ctry != dest_ctry
+
+    status = (
+        "Declined"
+        if (is_fraud_infrastructure and random.random() > 0.5)
+        else random.choice(["Approved", "Approved", "Approved", "Pending"])
+    )
+
+    transaction_data.append(
+        {
+            "transaction_id": t_id,
+            "customer_id": c_id,
+            "beneficiary_id": b_id,
+            "merchant_id": m_id,
+            "device_id": d_id,
+            "transaction_timestamp": start_timeline
+            + timedelta(minutes=int(i * (180 * 24 * 60 / COUNTS["transactions"]))),
+            "transaction_type": tx_type,
+            "transaction_amount": amount,
+            "currency": random.choice(["USD", "EUR", "GBP", "CAD"]),
+            "payment_method": random.choice(
+                ["Account Balance", "Credit Card", "Debit Card"]
+            ),
+            "transaction_status": status,
+            "ip_address": fake.ipv4(),
+            "origin_country": orig_ctry,
+            "destination_country": dest_ctry,
+            "is_international": is_intl,
+            "created_at": datetime.now(),
+        }
+    )
+df_transactions = pd.DataFrame(transaction_data)
+
+# ----------------------------------------------------
+# 8. CUSTOMER BEHAVIOR LOGS
+# ----------------------------------------------------
+behavior_data = []
+behavior_ids = [f"BEH_{uuid.uuid4().hex}" for _ in range(COUNTS["customer_behavior"])]
+tx_sample_pool = df_transactions.sample(
+    n=COUNTS["customer_behavior"], replace=False
+).to_dict(orient="records")
+
+for i in range(COUNTS["customer_behavior"]):
+    tx_ref = tx_sample_pool[i]
+    is_bad = tx_ref["device_id"] == mule_device or tx_ref["beneficiary_id"] == mule_bene
+
+    login_t = tx_ref["transaction_timestamp"] - timedelta(minutes=random.randint(2, 15))
+    logout_t = tx_ref["transaction_timestamp"] + timedelta(
+        minutes=random.randint(1, 10)
+    )
+
+    behavior_data.append(
+        {
+            "behavior_id": behavior_ids[i],
+            "customer_id": tx_ref["customer_id"],
+            "transaction_id": tx_ref["transaction_id"],
+            "device_id": tx_ref["device_id"],
+            "login_timestamp": login_t,
+            "logout_timestamp": logout_t,
+            "session_duration_minutes": int((logout_t - login_t).total_seconds() / 60),
+            "behavior_risk_score": (
+                round(random.uniform(75.0, 100.0), 2)
+                if is_bad
+                else round(random.uniform(0.0, 40.0), 2)
+            ),
+            "account_takeover_suspected": is_bad and random.random() > 0.3,
+            "transaction_frequency_24h": (
+                random.randint(12, 50) if is_bad else random.randint(1, 5)
+            ),
+            "avg_transaction_amount_7d": (
+                round(random.uniform(8000, 60000), 2)
+                if is_bad
+                else round(random.uniform(10, 500), 2)
+            ),
+            "failed_transaction_count_24h": (
+                random.randint(4, 15) if is_bad else random.randint(0, 1)
+            ),
+            "unusual_amount_flag": is_bad,
+            "unusual_location_flag": is_bad or random.random() < 0.02,
+            "typing_speed_flag": is_bad and random.random() > 0.5,
+            "fraud_flag": is_bad,
+            "fraud_risk": "High" if is_bad else "Low",
+            "created_at": datetime.now(),
+        }
+    )
+df_customer_behavior = pd.DataFrame(behavior_data)
+
+# ----------------------------------------------------
+# 9. TRANSACTION ANALYSIS LOGS
+# ----------------------------------------------------
+analysis_data = []
+analysis_ids = [
+    f"ANAL_{uuid.uuid4().hex}" for _ in range(COUNTS["transaction_analysis_logs"])
+]
+tx_list = df_transactions.to_dict(orient="records")
+behavior_map = df_customer_behavior.set_index("transaction_id").to_dict(orient="index")
+
+for i in range(COUNTS["transaction_analysis_logs"]):
+    tx_ref = tx_list[i]
+    tx_id = tx_ref["transaction_id"]
+
+    has_behavior = tx_id in behavior_map
+    is_graph_fraud = (
+        tx_ref["device_id"] == mule_device or tx_ref["beneficiary_id"] == mule_bene
+    )
+
+    b_score = (
+        behavior_map[tx_id]["behavior_risk_score"]
+        if has_behavior
+        else round(random.uniform(0, 30), 2)
+    )
+    g_score = (
+        round(random.uniform(85, 100), 2)
+        if is_graph_fraud
+        else round(random.uniform(0, 35), 2)
+    )
+    s_score = (
+        round(random.uniform(90, 100), 2)
+        if tx_ref["destination_country"] in ["North Korea", "Russia"]
+        else round(random.uniform(0, 10), 2)
+    )
+
+    overall = max(b_score, g_score, s_score)
+    prob = round(overall / 100.0, 2)
+
+    category = "High" if overall > 75 else "Medium" if overall > 40 else "Low"
+    decision = "Block" if overall > 75 else "Review" if overall > 40 else "Approve"
+
+    agent_1 = {
+        "agent_name": "VelocityParser",
+        "status": "flagged" if b_score > 60 else "clear",
+        "metrics": {"24h_count": random.randint(10, 50) if is_graph_fraud else 2},
+    }
+    agent_2 = {
+        "agent_name": "DeviceGraphSpy",
+        "status": "shared_mule_pool" if is_graph_fraud else "isolated",
+    }
+    agent_3 = {"agent_name": "SanctionScanner", "matches": 1 if s_score > 50 else 0}
+    agent_4 = {
+        "agent_name": "Geolocator",
+        "distance_miles": (
+            random.randint(2000, 7000) if is_graph_fraud else random.randint(0, 15)
+        ),
+    }
+    agent_5 = {
+        "agent_name": "LLMSummarizer",
+        "verdict": (
+            "Suspicious pattern tracking cluster matching known syndicate"
+            if is_graph_fraud
+            else "Safe user footprint"
+        ),
+    }
+
+    analysis_data.append(
+        {
+            "transaction_analysis_id": analysis_ids[i],
+            "transaction_id": tx_id,
+            "customer_id": tx_ref["customer_id"],
+            "fraud_probability": prob,
+            "behavior_score": b_score,
+            "graph_score": g_score,
+            "sanction_score": s_score,
+            "overall_risk_score": overall,
+            "risk_category": category,
+            "decision": decision,
+            "agent1_output": json.dumps(agent_1),
+            "agent2_output": json.dumps(agent_2),
+            "agent3_output": json.dumps(agent_3),
+            "agent4_output": json.dumps(agent_4),
+            "agent5_output": json.dumps(agent_5),
+            "recommended_action": (
+                "Freeze Account immediately & report SAR" if overall > 75 else "None"
+            ),
+            "investigation_status": "Open" if overall > 75 else "Closed",
+            "report": b"Raw investigation binary stream context telemetry data standard dump log metrics string placeholder format",
+            "created_at": tx_ref["transaction_timestamp"] + timedelta(seconds=2),
+        }
+    )
+df_analysis_logs = pd.DataFrame(analysis_data)
+
+# ----------------------------------------------------
+# 10. SAVE AND EXPORT
+# ----------------------------------------------------
+output_dir = "synthetic_fraud_data"
+os.makedirs(output_dir, exist_ok=True)
+
+exports = {
+    "customers": df_customers,
+    "devices": df_devices,
+    "beneficiaries": df_beneficiaries,
+    "merchants": df_merchants,
+    "customer_devices": df_customer_devices,
+    "customer_beneficiaries": df_customer_beneficiaries,
+    "sanction_list": df_sanction,
+    "transactions": df_transactions,
+    "customer_behavior": df_customer_behavior,
+    "transaction_analysis_logs": df_analysis_logs,
+}
+
+print("\n💾 Writing CSV Datasets to system directory...")
+for name, dataframe in exports.items():
+    file_path = os.path.join(output_dir, f"{name}.csv")
+    dataframe.to_csv(file_path, index=False)
+    print(f"   ↳ Written {file_path:<40} Rows Generated: {len(dataframe)}")
+
+print("\n✨ Data generation complete! Ready for PostgreSQL and Neo4j processing.")

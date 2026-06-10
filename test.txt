@@ -1,0 +1,269 @@
+```sql
+#==========================================
+#CREATE SCHEMA
+#==========================================
+
+CREATE SCHEMA IF NOT EXISTS fraud_platform;
+
+#==========================================
+#CUSTOMERS
+#==========================================
+
+CREATE TABLE IF NOT EXISTS fraud_platform.customers (
+    customer_id VARCHAR(50) PRIMARY KEY,
+    customer_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    phone_number VARCHAR(50) UNIQUE NOT NULL,
+    account_number VARCHAR(50) UNIQUE NOT NULL,
+    date_of_birth DATE,
+    gender VARCHAR(20),
+    account_type VARCHAR(50),
+    account_open_date DATE,
+    account_age_days INTEGER,
+    nationality VARCHAR(100),
+    country VARCHAR(100),
+    city VARCHAR(100),
+    address TEXT,
+    occupation VARCHAR(100),
+    annual_income NUMERIC(15,2),
+    kyc_status VARCHAR(20),
+    customer_risk_rating VARCHAR(20),
+    previous_fraud_flag BOOLEAN DEFAULT FALSE,
+    fraud_incident_count INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+#==========================================
+#DEVICES
+#==========================================
+
+CREATE TABLE IF NOT EXISTS fraud_platform.devices (
+    device_id VARCHAR(100) PRIMARY KEY,
+    device_fingerprint VARCHAR(255) UNIQUE,
+    device_type VARCHAR(50),
+    operating_system VARCHAR(100),
+    browser VARCHAR(100),
+    first_seen TIMESTAMP,
+    last_seen TIMESTAMP,
+    device_risk_score NUMERIC(5,2),
+    is_blacklisted BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+#==========================================
+#BENEFICIARIES
+#==========================================
+
+CREATE TABLE IF NOT EXISTS fraud_platform.beneficiaries (
+    beneficiary_id VARCHAR(50) PRIMARY KEY,
+    receiver_account VARCHAR(50) UNIQUE NOT NULL,
+    receiver_name VARCHAR(255),
+    bank_name VARCHAR(255),
+    country VARCHAR(100),
+    risk_rating VARCHAR(20),
+    fraud_link_count INTEGER DEFAULT 0,
+    sanction_match_flag BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+#==========================================
+#MERCHANTS
+#==========================================
+
+CREATE TABLE IF NOT EXISTS fraud_platform.merchants (
+    merchant_id VARCHAR(50) PRIMARY KEY,
+    merchant_name VARCHAR(255) UNIQUE NOT NULL,
+    merchant_category VARCHAR(100),
+    merchant_country VARCHAR(100),
+    merchant_risk_rating VARCHAR(20),
+    fraud_transaction_count INTEGER DEFAULT 0,
+    total_transaction_count INTEGER DEFAULT 0,
+    merchant_status VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+#==========================================
+#CUSTOMER DEVICES
+#==========================================
+
+CREATE TABLE IF NOT EXISTS fraud_platform.customer_devices (
+    customer_id VARCHAR(50),
+    device_id VARCHAR(100),
+    first_seen TIMESTAMP,
+    last_seen TIMESTAMP,
+
+    PRIMARY KEY (customer_id, device_id),
+
+    FOREIGN KEY (customer_id)
+        REFERENCES fraud_platform.customers(customer_id),
+
+    FOREIGN KEY (device_id)
+        REFERENCES fraud_platform.devices(device_id)
+);
+
+#==========================================
+#CUSTOMER BENEFICIARIES
+#==========================================
+
+CREATE TABLE IF NOT EXISTS fraud_platform.customer_beneficiaries (
+    customer_id VARCHAR(50),
+    beneficiary_id VARCHAR(50),
+    first_transaction_date TIMESTAMP,
+    last_transaction_date TIMESTAMP,
+    relationship_risk_score NUMERIC(5,2),
+
+    PRIMARY KEY (customer_id, beneficiary_id),
+
+    FOREIGN KEY (customer_id)
+        REFERENCES fraud_platform.customers(customer_id),
+
+    FOREIGN KEY (beneficiary_id)
+        REFERENCES fraud_platform.beneficiaries(beneficiary_id)
+);
+
+#==========================================
+#SANCTION LIST
+#==========================================
+
+CREATE TABLE IF NOT EXISTS fraud_platform.sanction_list (
+    entity_id VARCHAR(50) PRIMARY KEY,
+    entity_name VARCHAR(255),
+    entity_type VARCHAR(50),
+    country VARCHAR(100),
+    sanction_source VARCHAR(100),
+    sanction_category VARCHAR(100),
+    reason_for_sanction TEXT,
+    risk_level VARCHAR(20),
+    pep_flag BOOLEAN,
+    fraudster_flag BOOLEAN,
+    blacklist_flag BOOLEAN,
+    regulatory_reference TEXT,
+    effective_date DATE,
+    expiry_date DATE,
+    status VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+#==========================================
+#TRANSACTIONS
+#==========================================
+
+CREATE TABLE IF NOT EXISTS fraud_platform.transactions (
+    transaction_id VARCHAR(50) PRIMARY KEY,
+
+    customer_id VARCHAR(50) NOT NULL,
+    beneficiary_id VARCHAR(50),
+    merchant_id VARCHAR(50),
+    device_id VARCHAR(100),
+
+    transaction_timestamp TIMESTAMP NOT NULL,
+    transaction_type VARCHAR(50),
+    transaction_amount NUMERIC(15,2),
+    currency CHAR(3),
+    payment_method VARCHAR(50),
+    transaction_status VARCHAR(20),
+
+    ip_address VARCHAR(100),
+    origin_country VARCHAR(100),
+    destination_country VARCHAR(100),
+    is_international BOOLEAN,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (customer_id)
+        REFERENCES fraud_platform.customers(customer_id),
+
+    FOREIGN KEY (beneficiary_id)
+        REFERENCES fraud_platform.beneficiaries(beneficiary_id),
+
+    FOREIGN KEY (merchant_id)
+        REFERENCES fraud_platform.merchants(merchant_id),
+
+    FOREIGN KEY (device_id)
+        REFERENCES fraud_platform.devices(device_id)
+);
+
+#==========================================
+#CUSTOMER BEHAVIOR
+#==========================================
+
+CREATE TABLE IF NOT EXISTS fraud_platform.customer_behavior (
+    behavior_id VARCHAR(50) PRIMARY KEY,
+
+    customer_id VARCHAR(50),
+    transaction_id VARCHAR(50),
+    device_id VARCHAR(100),
+
+    login_timestamp TIMESTAMP,
+    logout_timestamp TIMESTAMP,
+    session_duration_minutes INTEGER,
+
+    behavior_risk_score NUMERIC(5,2),
+    account_takeover_suspected BOOLEAN,
+
+    transaction_frequency_24h INTEGER,
+    avg_transaction_amount_7d NUMERIC(15,2),
+    failed_transaction_count_24h INTEGER,
+
+    unusual_amount_flag BOOLEAN,
+    unusual_location_flag BOOLEAN,
+    typing_speed_flag BOOLEAN,
+
+    fraud_flag BOOLEAN,
+    fraud_risk VARCHAR(20),
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (customer_id)
+        REFERENCES fraud_platform.customers(customer_id),
+
+    FOREIGN KEY (transaction_id)
+        REFERENCES fraud_platform.transactions(transaction_id),
+
+    FOREIGN KEY (device_id)
+        REFERENCES fraud_platform.devices(device_id)
+);
+
+#==========================================
+#TRANSACTION ANALYSIS LOGS
+#==========================================
+
+CREATE TABLE IF NOT EXISTS fraud_platform.transaction_analysis_logs (
+    transaction_analysis_id VARCHAR(50) PRIMARY KEY,
+
+    transaction_id VARCHAR(50),
+    customer_id VARCHAR(50),
+
+    fraud_probability NUMERIC(5,2),
+    behavior_score NUMERIC(5,2),
+    graph_score NUMERIC(5,2),
+    sanction_score NUMERIC(5,2),
+    overall_risk_score NUMERIC(5,2),
+
+    risk_category VARCHAR(20),
+    decision VARCHAR(50),
+
+    agent1_output JSONB,
+    agent2_output JSONB,
+    agent3_output JSONB,
+    agent4_output JSONB,
+    agent5_output JSONB,
+
+    recommended_action TEXT,
+    investigation_status VARCHAR(50),
+
+    report BYTEA,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (transaction_id)
+        REFERENCES fraud_platform.transactions(transaction_id),
+
+    FOREIGN KEY (customer_id)
+        REFERENCES fraud_platform.customers(customer_id)
+);
+"""

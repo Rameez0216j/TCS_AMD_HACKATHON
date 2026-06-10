@@ -1,0 +1,7 @@
+Anomaly Detection - LLama 3
+Behaviour Analytics - Deepseek R1
+Grapgh Analytics Engine  - Deepseek R1
+Fraud Network Detection  - Deepseek R1
+LLM Reasoning & Expalination  -  - Deepseek R1
+RAG Engine -ChromaDB
+All analysis data should go to transacation analyais table
