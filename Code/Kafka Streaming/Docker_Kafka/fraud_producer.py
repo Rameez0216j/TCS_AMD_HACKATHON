@@ -9,7 +9,7 @@ from confluent_kafka import Producer
 from dotenv import load_dotenv
 
 # Load environment configuration
-load_dotenv("../../../.env")
+load_dotenv("")
 
 config = {
     "bootstrap.servers": os.getenv("BOOTSTRAP_SERVERS"),

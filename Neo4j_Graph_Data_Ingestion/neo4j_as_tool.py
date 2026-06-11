@@ -27,6 +27,7 @@ llm = ChatGroq(
 # Connect to the Neo4j Graph Database
 # This automatically fetches your database schema behind the scenes
 graph = Neo4jGraph(url=NEO4J_URI, username=NEO4J_USERNAME, password=NEO4J_PASSWORD)
+print(graph.schema)  # Debug: Print the fetched schema to verify connection and data presence
 
 CYPHER_GENERATION_TEMPLATE = """
 You are a Neo4j Cypher expert.
@@ -72,7 +73,8 @@ cypher_chain = GraphCypherQAChain.from_llm(
     llm=llm,
     graph=graph,
     cypher_prompt=cypher_prompt,
-    verbose=True
+    verbose=True,
+    allow_dangerous_requests=True,
 )
 
 
