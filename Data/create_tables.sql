@@ -159,30 +159,6 @@ CREATE TABLE
         FOREIGN KEY (device_id) REFERENCES devices (device_id) ON DELETE SET NULL
     );
 
-CREATE TABLE
-    IF NOT EXISTS transaction_analysis_logs (
-        transaction_analysis_id VARCHAR(50) PRIMARY KEY,
-        transaction_id VARCHAR(50) NOT NULL UNIQUE,
-        customer_id VARCHAR(50) NOT NULL,
-        fraud_probability NUMERIC(5, 2),
-        behavior_score NUMERIC(5, 2),
-        graph_score NUMERIC(5, 2),
-        sanction_score NUMERIC(5, 2),
-        overall_risk_score NUMERIC(5, 2),
-        risk_category VARCHAR(20),
-        decision VARCHAR(50),
-        agent1_output JSONB,
-        agent2_output JSONB,
-        agent3_output JSONB,
-        agent4_output JSONB,
-        agent5_output JSONB,
-        recommended_action TEXT,
-        investigation_status VARCHAR(50),
-        report BYTEA,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (transaction_id) REFERENCES transactions (transaction_id) ON DELETE CASCADE,
-        FOREIGN KEY (customer_id) REFERENCES customers (customer_id) ON DELETE CASCADE
-    );
 
 -- Performance optimization for critical relational joins
 CREATE INDEX idx_transactions_customer_id ON transactions (customer_id);

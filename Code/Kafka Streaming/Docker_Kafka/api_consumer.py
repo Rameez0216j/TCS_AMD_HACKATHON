@@ -4,7 +4,7 @@ import sys
 from confluent_kafka import Consumer, KafkaError
 from dotenv import load_dotenv
 
-# Load ../../.env
+# Load environment configuration
 load_dotenv("../../../.env")
 
 # Kafka Consumer Configuration Engine
@@ -26,10 +26,10 @@ print("=" * 70)
 
 # Terminal Coloring Sequences
 COLOR_RESET = "\033[0m"
-COLOR_RED = "\033[91m"  # Blocked/High Risk
-COLOR_GREEN = "\033[92m"  # Safe/Approved
-COLOR_YELLOW = "\033[93m"  # Warning/Review Needed
-COLOR_CYAN = "\033[96m"  # Labels
+COLOR_RED = "\033[91m"      # Blocked/High Risk
+COLOR_GREEN = "\033[92m"    # Safe/Approved
+COLOR_YELLOW = "\033[93m"   # Warning/Review Needed
+COLOR_CYAN = "\033[96m"     # Labels
 
 try:
     while True:
@@ -49,13 +49,27 @@ try:
         raw_payload = msg.value().decode("utf-8")
         data = json.loads(raw_payload)
 
-        # Destructure items for output logging
+        # --- SCHEMA ALIGNMENT FIXES ---
+        # 1. Root Level Mappings
         tx_id = data["transaction_id"]
         cid = data["customer_id"]
-        amount = data["amount"]
-        risk = data["risk_profile"]
-        decision = risk["orchestrator_decision"]
-        prob = risk["fraud_probability_pct"]
+        amount = data["transaction_amount"]  # Aligned from 'amount'
+
+        # 2. Extract Agent Telemetry Nested Dictionary
+        telemetry = data.get("agent_pipelines_telemetry", {})
+        decision = telemetry.get("orchestrator_decision", "REVIEW_REQUIRED")
+        prob = telemetry.get("initial_llm_probability", 0.0)
+        risk_cat = telemetry.get("initial_risk_category", "MEDIUM")
+        
+        # 3. Extract Features Classifier & Context Objects
+        features = data.get("features_for_classifier", {})
+        behavioral_ctx = telemetry.get("behavioral_agent_context", {})
+        graph_ctx = telemetry.get("graph_agent_context", {})
+
+        velocity_24h = features.get("transaction_frequency_24h", 0)
+        automation_suspected = behavioral_ctx.get("automation_script_suspected", False)
+        fraud_flag = graph_ctx.get("known_fraud_ring_edge", False)
+        mule_count = graph_ctx.get("shared_device_mule_count", 0)
 
         # Dynamically assign alert styling color maps based on data context
         if decision == "BLOCKED":
@@ -74,18 +88,19 @@ try:
             f" └── {COLOR_CYAN}Customer ID:{COLOR_RESET} {cid} | {COLOR_CYAN}Amount:{COLOR_RESET} ₹{amount:,.2f}"
         )
         print(
-            f" └── {COLOR_CYAN}Fraud Risk Score:{COLOR_RESET} {alert_color}{prob}% ({risk['risk_category']} RISK){COLOR_RESET}"
+            f" └── {COLOR_CYAN}Fraud Risk Score:{COLOR_RESET} {alert_color}{prob}% ({risk_cat} RISK){COLOR_RESET}"
         )
         print(
-            f" └── {COLOR_CYAN}Telemetry:{COLOR_RESET} Velocity 24h: {data['telemetry']['velocity_24h_count']} calls | Dev Compromise: {data['telemetry']['device_compromised']}"
+            f" └── {COLOR_CYAN}Telemetry:{COLOR_RESET} Velocity 24h: {velocity_24h} calls | Automation Suspected: {automation_suspected}"
         )
-        if risk["fraud_flag"]:
+        
+        if fraud_flag:
             print(
-                f" └── {COLOR_RED}Graph Guard Insight:{COLOR_RESET} {data['agent_insights']['graph_agent_output']}"
+                f" └── {COLOR_RED}Graph Guard Insight:{COLOR_RESET} Known fraud ring link identified! Shared Device Mule Count: {mule_count}"
             )
         print("-" * 60)
 
 except KeyboardInterrupt:
-    print("\n[*] Shutting down API Consumer interface down safely.")
+    print("\n[*] Shutting down API Consumer interface safely.")
 finally:
     consumer.close()

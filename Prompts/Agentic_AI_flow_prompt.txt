@@ -1,0 +1,91 @@
+My Solution flow
+
+"""
+
+Kafka Transaction Stream
+          |
+          v
+Feature Engineering
+          |
+          v
+XGBoost Fraud Model
+          |
+          v
+	Fraud Score
+          |
+          v
+LangGraph Investigation
+          |
+   ----------------------
+   |        |            |
+Behavior  Graph   Reasoning agent
+ Agent    Agent   Agent
+   |        |            |
+   ----------------------
+          |
+          v
+Decision Agent (with Guardrails)
+          |
+          v
+PDF Fraud Report
+          |
+          v
+Transaction_analysis_log insertion in database
+          |
+          v
+The same data is projected life on a dashboard (record by record)
+"""
+
+
+I need you to focus on "
+LangGraph Investigation
+          |
+   ----------------------
+   |        |            |
+Behavior  Graph   Reasoning agent
+ Agent    Agent   Agent
+   |        |            |
+   ----------------------
+          |
+          v
+Decision Agent (with Guardrails)
+          |
+          v
+PDF Fraud Report
+          |
+          v
+"
+
+part 
+
+use Langchain, langgraph etc keep scope for tools integration with agents and use MCP for guardrails 
+
+1. I need a proper modular code.
+
+2. Graph agent has tool neo4j graph database
+
+3. ALL three agents Behavior Agent, Graph Agent, Reasoning agent have access to a vector BD (ChromaDB) having relevant doc context 
+Each agent operates on different docs such as 
+Behaviour agent (docs with name = behavioral_anomalies)
+Graph agent (docs with name = network_typologies)
+Reasoning agent (docs with name = legal_compliance [regulations and compliance data])
+
+There should be a stateful graph where state is properly maintained as i need the final verdict of all the agents to be present for inserting them to database
+
+At the end Decision agent will take the final verdicts of all the agents and generates a report in PDF with all necessary details (for time being keep it text)
+and dumps it into a local folder. This agent will have a MCP server (FAST MCP server) as a Guardrail
+
+
+There can be conditional edges between agents and loops which has limited iterations. I think conditional edges will help us in refining the output and also in tuning the output.
+
+Please generate the code in a proper modular structure with a main file to run the code.
+
+
+We will use LLMS as (groq API):
+
+
+Behaviour Agent - LLama 3
+Grapgh Agnet  - Deepseek R1
+Reasoning agent  - Deepseek R1
+Decison Agent  -  - Deepseek R1
+RAG Engine -ChromaDB
