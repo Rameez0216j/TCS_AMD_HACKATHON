@@ -1,0 +1,39 @@
+Transaction Event
+      |
+      v
+Anomaly Node (XGBoost Wrapper)
+      |
+      v
++-------------------------------+
+| Parallel Investigation Layer  |
++-------------------------------+
+      |
+      |----> Behavioral Agent (Llama3)
+      |
+      |----> Network Agent (DeepSeek-R1 + Neo4j)
+      |
+      |----> Compliance Agent (DeepSeek-R1)
+      |
+      +-------------------------------+
+                      |
+                      v
+           Reasoning / Consensus Agent
+                      |
+           Conditional Confidence Check
+               |              |
+          confidence>0.8      |
+               |              |
+               v              |
+        Decision Agent        |
+               |              |
+               +------<-------+
+                 retry max=2
+                      |
+                      v
+             MCP Guardrail Check
+                      |
+                      v
+               Fraud Report
+                      |
+                      v
+              Database Insert

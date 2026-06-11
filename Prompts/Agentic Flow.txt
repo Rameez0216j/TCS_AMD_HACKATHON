@@ -1,0 +1,233 @@
+I need code for fraud detection using transaction data as input 
+""
+event_payload = {
+            "transaction_id": tx_id,
+            "customer_id": customer,
+            "beneficiary_id": beneficiary,
+            "merchant_id": merchant,
+            "device_id": device,
+            "transaction_timestamp": datetime.utcnow().isoformat() + "Z",
+            "transaction_type": random.choice(["TRANSFER", "PAYMENT", "WITHDRAWAL"]),
+            "transaction_amount": amount,
+            "currency": "INR",
+            "payment_method": random.choice(PAYMENT_METHODS),
+            "ip_address": ip_address,
+            "origin_country": origin_country,
+            "destination_country": dest_country,
+            "transaction_status": transaction_status,
+            "is_international": origin_country != dest_country,
+            # Data explicitly formatted to feed downstream LLMs / SHAP
+            "features_for_classifier": {
+                "account_age_days": random.randint(10, 1500),
+                "transaction_frequency_24h": (
+                    random.randint(15, 60) if is_fraud else random.randint(1, 5)
+                ),
+                "failed_transaction_count_24h": (
+                    random.randint(3, 10) if (is_fraud and random.random() < 0.4) else 0
+                ),
+                "avg_transaction_amount_7d": round(
+                    float(np.random.lognormal(7.0, 0.5)), 2
+                ),
+                "session_duration_minutes": random.randint(1, 45),
+                "device_risk_score": (
+                    round(random.uniform(70.0, 100.0), 2)
+                    if device in HIGH_RISK_DEVICES
+                    else round(random.uniform(0.0, 35.0), 2)
+                ),
+                "unusual_amount_flag": is_fraud,
+                "unusual_location_flag": origin_country != "IN",
+                "typing_speed_flag": is_fraud and random.random() < 0.6,
+            },
+            # Core data inputs engineered for LangGraph Agents
+            "agent_pipelines_telemetry": {
+                "initial_llm_probability": fraud_prob,
+                "initial_risk_category": risk_cat,
+                "orchestrator_decision": decision,
+                "behavioral_agent_context": {
+                    "biometric_anomaly_detected": is_fraud,
+                    "automation_script_suspected": is_fraud and random.random() < 0.8,
+                },
+                "graph_agent_context": {
+                    "shared_device_mule_count": (
+                        random.randint(4, 15) if is_fraud else 1
+                    ),
+                    "known_fraud_ring_edge": is_fraud,
+                },
+                "risk_agent_context": {
+                    "sanction_list_match": is_fraud and random.random() < 0.15,
+                    "pep_flag": random.random() < 0.02,  # Politically Exposed Person
+                    "beneficiary_risk_rating": (
+                        "HIGH" if beneficiary in HIGH_RISK_BENEFICIARIES else "LOW"
+                    ),
+                },
+            },
+        }
+""
+
+
+
+Langgraph flow
+
+""
+LangGraph Investigation
+          |
+   ----------------------
+   |        |            |
+Behavior  Graph   Reasoning agent
+ Agent    Agent   Agent
+   |        |            |
+   ----------------------
+          |
+          v
+Decision Agent (with Guardrails)
+          |
+          v
+PDF Fraud Report
+          |
+          v
+""
+
+
+
+Ensure we have stateful graph structure following below folder structure
+
+""
+agents/                     # LangGraph Multi-Agent Cluster
+    ├── __init__.py
+    ├── state.py                # Typed Dict GraphState schema definitions
+    ├── graph.py                # Graph structural topology, transitions, and compilation
+    │
+    ├── nodes/                  # Isolated core analytical workers
+    │   ├── __init__.py
+    │   ├── anomaly_node.py     # Worker 1: XGBoost classification wrapper
+    │   ├── behavioral_node.py  # Worker 2: Biometric/ATO analyzer
+    │   ├── network_node.py     # Worker 3: Graph structural analyzer
+    │   └── compliance_node.py  # Worker 4: Sanction/AML inspector
+    │
+    └── tools/                  # Shared custom tool belts
+        ├── __init__.py
+        ├── graph_tools.py      # Automated Cypher QA runtimes
+        └── rag_tools.py        # Vector document search spaces
+""
+
+
+we are using llms from groq API (testing) we will use the ollama local models in production though so keep the llm models flexible to initialize
+""
+Behaviour Agent - LLama 3
+Grapgh Agnet  - Deepseek R1
+Reasoning agent  - Deepseek R1
+Decison Agent  -  - Deepseek R1
+""
+
+use Langchain, langgraph etc keep scope for tools integration with agents and use MCP for guardrails 
+
+1. I need a proper modular code.
+
+2. Graph agent has tool neo4j graph database
+
+3. ALL three agents Behavior Agent, Graph Agent, Reasoning agent have access to a vector BD (ChromaDB) having relevant doc context 
+Each agent operates on different docs such as 
+Behaviour agent (docs with name = behavioral_anomalies)
+Graph agent (docs with name = network_typologies)
+Reasoning agent (docs with name = legal_compliance [regulations and compliance data])
+
+There should be a stateful graph where state is properly maintained as i need the final verdict of all the agents to be present for inserting them to database
+
+At the end Decision agent will take the final verdicts of all the agents and generates a report in PDF with all necessary details (for time being keep it text)
+and dumps it into a local folder. This agent will have a MCP server (FAST MCP server) as a Guardrail
+
+
+There can be conditional edges between agents and loops which has limited iterations. I think conditional edges will help us in refining the output and also in tuning the output.
+
+Please generate the code in a proper modular structure with a main file to run the code.
+
+
+The entire folder structure is as follow 
+""
+fraud_detection_system/
+│
+├── main.py                         # Application CLI runner / Entrypoint Orchestrator
+|
+├── config/                             # Centralized settings & environment parsers
+│   ├── .env
+│   └── settings.py
+│
+├── data/                               # Database schemas and physical flat files
+│   ├── raw/
+│   ├── synthetic/
+│   └── sql/
+│       ├── create_tables.sql
+│       └── drop_tables.sql
+│
+├── deploy/                             # Containerization and container dependencies
+│   └── docker-compose.yaml
+│
+├── models/                             # Serialized ML production weights
+│   └── artifacts/
+│
+├── storage/                            # Persistent localized databases
+│   └── chroma_storage/
+│
+└── src/                                # System source root module
+    ├── __init__.py
+    │
+    ├── components/                     # Pluggable feature sub-packages
+    │   ├── __init__.py
+    │   │
+    │   ├── data_gen/                   # Simulation Engine
+    │   │   ├── __init__.py
+    │   │   └── generator.py
+    │   │
+    │   ├── database/                   # Storage Layer Engine
+    │   │   ├── __init__.py
+    │   │   ├── postgres_client.py      # Core connection pooling wrapper
+    │   │   ├── neo4j_client.py         # Graph Driver connection manager
+    │   │   ├── postgres_ingest.py      # Bulk file ingestion pipelines
+    │   │   └── neo4j_ingest.py         # Batch unwinding Cypher engines
+    │   │
+    │   ├── streaming/                  # Kafka cluster communication bus
+    │   │   ├── __init__.py
+    │   │   ├── producer.py
+    │   │   └── consumer.py
+    │   │
+    │   ├── models/                     # XGBoost Inference pipeline wrapper
+    │   │   ├── __init__.py
+    │   │   └── predictor.py
+    │   │
+    │   ├── rag/                        # Knowledge Base Embeddings & Vectors
+    │   │   ├── __init__.py
+    │   │   ├── ingestion.py
+    │   │   └── retriever.py
+    │   │
+    │   └── agents/                     # LangGraph Multi-Agent Cluster
+    │       ├── __init__.py
+    │       ├── state.py                # Typed Dict GraphState schema definitions
+    │       ├── graph.py                # Graph structural topology, transitions, and compilation
+    │       │
+    │       ├── nodes/                  # Isolated core analytical workers
+    │       │   ├── __init__.py
+    │       │   ├── anomaly_node.py     # Worker 1: XGBoost classification wrapper
+    │       │   ├── behavioral_node.py  # Worker 2: Biometric/ATO analyzer
+    │       │   ├── network_node.py     # Worker 3: Graph structural analyzer
+    │       │   └── compliance_node.py  # Worker 4: Sanction/AML inspector
+    │       │
+    │       └── tools/                  # Shared custom tool belts
+    │           ├── __init__.py
+    │           ├── graph_tools.py      # Automated Cypher QA runtimes
+    │           └── rag_tools.py        # Vector document search spaces
+    │
+    ├── dashboard/                      # UI Visualization Layer (Streamlit)
+    │   ├── __init__.py
+    │   ├── app.py                      # Dashboard application main loop (polling last 12 txs)
+    │   └── visuals.py                  # Custom metric cards, Plotly charts, and terminal layouts
+    │
+    └── mcp_servers/                    # Independent Model Context Protocol Layer
+        ├── __init__.py
+        ├── guardrail_server.py         # Server 1: Input/Output validation & safety rails
+        └── graph_retriever_server.py   # Server 2: Structural context expansion provider
+""
+
+
+but you focus only on the agents parts assuming the rest is completed by us.
+
+We need to properly test the code for agentic AI before integrating it to main project so use dummy data for simulation of agents, use groq API for llms, assume that i have required credentials already in .env file.

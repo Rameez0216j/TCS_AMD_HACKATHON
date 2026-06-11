@@ -28,18 +28,27 @@ llm = ChatGroq(
 # This automatically fetches your database schema behind the scenes
 graph = Neo4jGraph(url=NEO4J_URI, username=NEO4J_USERNAME, password=NEO4J_PASSWORD)
 
-
 CYPHER_GENERATION_TEMPLATE = """
 You are a Neo4j Cypher expert.
 
-IMPORTANT:
-- Neo4j version is 5.x
-- Never use SIZE((n)--())
-- Never use SIZE((n)-[]->())
-- Use COUNT {{ (n)--() }} instead.
-
 Schema:
 {schema}
+
+Rules:
+- Generate exactly ONE Cypher query.
+- Never generate multiple statements.
+- Never use CALL gds.*
+- Never use CALL apoc.*
+- Never use CREATE.
+- Never use MERGE.
+- Never use DELETE.
+- Never use SET.
+- Only generate READ-ONLY Cypher.
+- Return valid Neo4j 5.x syntax.
+- Never use SIZE((n)--()).
+- Use COUNT {{ (n)--() }} instead.
+- Only use labels, relationships, and properties present in the schema.
+- Return ONLY the Cypher query.
 
 Question:
 {question}
@@ -63,8 +72,7 @@ cypher_chain = GraphCypherQAChain.from_llm(
     llm=llm,
     graph=graph,
     cypher_prompt=cypher_prompt,
-    verbose=True,
-    allow_dangerous_requests=True,
+    verbose=True
 )
 
 
