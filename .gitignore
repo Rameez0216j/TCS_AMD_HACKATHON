@@ -5,7 +5,7 @@ __pycache__/
 
 # C extensions
 *.so
-
+UBUNTU/config/secrets.txt
 # Distribution / packaging
 .Python
 build/
